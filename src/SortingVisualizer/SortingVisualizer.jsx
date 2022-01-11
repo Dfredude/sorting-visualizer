@@ -5,7 +5,8 @@ import './SortingVisualizer.css';
 const defaultColor = 'blue';
 const comparingColor = 'red';
 const animation_speed = 10;
-const amount_of_bars = 80
+const amount_of_bars = 90;
+const renderer = 5.5;
 
 export default class SortingVisualizer extends React.Component {
     constructor(props) {
@@ -78,8 +79,8 @@ export default class SortingVisualizer extends React.Component {
           let height2 = animation.items[1].value;
           setTimeout(() => {
             console.log("Iteration: "+i);
-            bar1Style.height = `${height2}px`;
-            bar2Style.height = `${height1}px`;
+            bar1Style.height = `${height2/renderer}vh`;
+            bar2Style.height = `${height1/renderer}vh`;
           }, i * animation_speed)
         }
         else if (animation.type === "override") {
@@ -99,10 +100,10 @@ export default class SortingVisualizer extends React.Component {
             console.log("Iteration: "+i);
             console.log(startindex, lastindex)
             for(let k=startindex, l=0; k<lastindex; k++){
-              bar1Style.height = `${height}px`;
+              bar1Style.height = `${height/renderer}vh`;
               //console.log(arraybars[k+1].style.height);
               let barStyle = arraybars[k+1].style;
-              barStyle.height = `${arraybarsvalues[l]}px`;
+              barStyle.height = `${arraybarsvalues[l]/renderer}vh`;
               l++; 
             }
           }, i * animation_speed)
@@ -124,17 +125,16 @@ export default class SortingVisualizer extends React.Component {
 
     render(){
       const {array} = this.state;
-      return (<div>
+      return (<div class="application">
         <div class="array-container">
         {array.map((value, idx) => (
-          <div className="array-bar" key={idx} style={{height: `${value}px`}}>
+          <div className="array-bar" key={idx} style={{height: `${Math.floor(value/5.5)}vh`}}>
           </div>
         ))}
         </div>
         <div class="buttons">
           <button onClick={() => this.resetArray()}>Generate new Array</button>
           <button onClick={() => this.mergeSort()}>Merge Sort</button>
-          <button onClick={() => this.test()}>Test</button>
         </div>
         </div>
       )}

@@ -1,19 +1,19 @@
 .array-container {
-    margin-top: 2%;
-    padding-right: 1vh;
-    padding-bottom: 1vh;
+    margin: auto;
+    width: 90%;
+    padding: 10px;
 }
 
 .array-bar {
-    width: .5%;
+    width: .4vw;
     background-color: blue;
     display: inline-block;
-    margin: 1px 1.25px;
+    margin: .3% .3%;
 }
 
 .buttons {
-    bottom: 0%;
+    
     position: relative;
-    padding-top: 3vh;
+
 }
 
