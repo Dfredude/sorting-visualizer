@@ -1,18 +1,19 @@
 .array-container {
-    position: absolute;
-    left: 3vh;
-    bottom: 3vw;
-    padding-right: 5px;
+    margin-top: 2%;
+    padding-right: 1vh;
+    padding-bottom: 1vh;
 }
 
 .array-bar {
-    width: 3px;
+    width: .5%;
     background-color: blue;
     display: inline-block;
     margin: 1px 1.25px;
 }
 
 .buttons {
-    height: 50px;
-    bottom: 50px;
+    bottom: 0%;
+    position: relative;
+    padding-top: 3vh;
 }
+

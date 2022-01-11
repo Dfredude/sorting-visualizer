@@ -5,6 +5,7 @@ import './SortingVisualizer.css';
 const defaultColor = 'blue';
 const comparingColor = 'red';
 const animation_speed = 10;
+const amount_of_bars = 80
 
 export default class SortingVisualizer extends React.Component {
     constructor(props) {
@@ -22,8 +23,8 @@ export default class SortingVisualizer extends React.Component {
     resetArray(){
       //const array = [110, 507, 329, 358, 306, 570];
       const array = [];
-      for (let i = 0; i<270; i++) {
-        let value = randomIntFromInterval(5,550);
+      for (let i = 0; i<amount_of_bars; i++) {
+        let value = randomIntFromInterval(5,450);
         array.push(value);
       }
       this.setState({array});
@@ -123,20 +124,19 @@ export default class SortingVisualizer extends React.Component {
 
     render(){
       const {array} = this.state;
-      return (<>
+      return (<div>
         <div class="array-container">
         {array.map((value, idx) => (
           <div className="array-bar" key={idx} style={{height: `${value}px`}}>
           </div>
         ))}
         </div>
-        <br></br><br /><br />
         <div class="buttons">
           <button onClick={() => this.resetArray()}>Generate new Array</button>
           <button onClick={() => this.mergeSort()}>Merge Sort</button>
           <button onClick={() => this.test()}>Test</button>
         </div>
-        </>
+        </div>
       )}
   }
   
