@@ -4,17 +4,19 @@ import './SortingVisualizer.css';
 
 const defaultColor = 'blue';
 const comparingColor = 'red';
-const animation_speed = 10;
-const amount_of_bars = 90;
 const renderer = 5.5;
 
 export default class SortingVisualizer extends React.Component {
     constructor(props) {
       super(props);
+      this.handleChange = this.handleChange.bind(this)
 
       this.state = {
         array: [],
+        amount_of_bars: 95,
+        bars_width: .4
       };
+      this.animation_speed = 10;
     }
 
     componentDidMount(){
@@ -22,31 +24,14 @@ export default class SortingVisualizer extends React.Component {
     }
   
     resetArray(){
-      //const array = [110, 507, 329, 358, 306, 570];
       const array = [];
-      for (let i = 0; i<amount_of_bars; i++) {
+      for (let i = 0; i<this.state.amount_of_bars; i++) {
         let value = randomIntFromInterval(5,450);
         array.push(value);
       }
       this.setState({array});
     }
     
-    testMergeSort(){
-      for(let i=0; i<1000; i++){
-        let not_animations = new Animations(); // used only for testing, useless for main program  
-        this.resetArray();
-        let [mySort, myObjSort] = mergeSortFuncRender(this.state.array, createValueBars(this.state.array), not_animations)
-        let JSSort = this.state.array
-          .slice()
-          .sort((a,b) => a-b);
-        let myObjSortInInts = convertObjectsArrayToIntsArray(myObjSort);
-        if (areArraysEqual(JSSort, mySort) && areArraysEqual(JSSort, myObjSortInInts)){
-          console.log("Works a treat!")
-        }
-      }
-    }
-
-
     renderAnimations(animations) {
       let animations_array = animations.animations_array;
       let len = animations_array.length;
@@ -60,7 +45,7 @@ export default class SortingVisualizer extends React.Component {
             console.log("Iteration: "+i);
             bar1Style.backgroundColor = comparingColor;
             bar2Style.backgroundColor = comparingColor;
-            }, i * animation_speed
+            }, i * this.animation_speed
           )
         }
         else if (animation.type === 'setDefaultColor'){
@@ -70,7 +55,7 @@ export default class SortingVisualizer extends React.Component {
             console.log("Iteration: "+i);
             bar1Style.backgroundColor = defaultColor;
             bar2Style.backgroundColor = defaultColor;
-          }, i * animation_speed)
+          }, i * this.animation_speed)
         }
         else if (animation.type === 'swap') {
           const bar1Style = arraybars[animation.items[0].index].style;
@@ -81,7 +66,7 @@ export default class SortingVisualizer extends React.Component {
             console.log("Iteration: "+i);
             bar1Style.height = `${height2/renderer}vh`;
             bar2Style.height = `${height1/renderer}vh`;
-          }, i * animation_speed)
+          }, i * this.animation_speed)
         }
         else if (animation.type === "override") {
           let item1 = animation.items[0];
@@ -91,7 +76,7 @@ export default class SortingVisualizer extends React.Component {
           let startindex = item1.index;
           let bar1Style = arraybars[item1.index].style;
           let height = item2.value;
-          //Array containing all heights of bars going to drift right
+          //Array containing all heights of bars going to drift right 1 index
           let arraybarsvalues = [];
           for(let j=0; j<drift_array.length; j++){
             arraybarsvalues.push(drift_array[j].value);
@@ -101,40 +86,64 @@ export default class SortingVisualizer extends React.Component {
             console.log(startindex, lastindex)
             for(let k=startindex, l=0; k<lastindex; k++){
               bar1Style.height = `${height/renderer}vh`;
-              //console.log(arraybars[k+1].style.height);
               let barStyle = arraybars[k+1].style;
               barStyle.height = `${arraybarsvalues[l]/renderer}vh`;
               l++; 
             }
-          }, i * animation_speed)
+          }, i * this.animation_speed)
         }
       }
     }
 
     mergeSort(){
       this.animations = new Animations();
-      let [sortedArray, sortedObjectsArray] = mergeSortFuncRender(this.state.array, createValueBars(this.state.array), this.animations);
-      let sortedObjectsArrayInInts = convertObjectsArrayToIntsArray(sortedObjectsArray);
-      console.log(this.animations.animations_array);
+      //This functions returns all animations within the animations object
+      mergeSortFuncRender(this.state.array, createValueBars(this.state.array), this.animations);
       this.renderAnimations(this.animations);
     }
 
-    test(){
-      console.log(this.state.array)
+    handleChange(){
+      let value = document.getElementById("adjusting-bar").value;
+      let bars_width = width_interpolation(value);
+      console.log(bars_width);
+      let amount_of_bars = value;
+      this.setState((props) => {
+        return { amount_of_bars: amount_of_bars
+                  }
+      })
+      let bars = document.getElementsByClassName("array-bar")
+      for(let i=0; i<bars.length; i++){
+        bars[i].style.width = `${40/bars.length}%`;
+        //console.log(bars[i].style)
+      }
+      //bar_style.width = bars_width;
+      this.animation_speed = speed_interpolation(value)
+      
+      this.resetArray()
+
     }
 
     render(){
       const {array} = this.state;
-      return (<div class="application">
-        <div class="array-container">
+      return (<div className="application">
+        <div className="array-container">
         {array.map((value, idx) => (
-          <div className="array-bar" key={idx} style={{height: `${Math.floor(value/5.5)}vh`}}>
+          <div className="array-bar" key={idx} style={{height: `${Math.floor(value/renderer)}vh`}}>
           </div>
         ))}
         </div>
-        <div class="buttons">
-          <button onClick={() => this.resetArray()}>Generate new Array</button>
-          <button onClick={() => this.mergeSort()}>Merge Sort</button>
+        <div id="interface">
+            <div className="button-container">
+              <button id="new-array-button" onClick={() => this.resetArray()}>Generate new array</button>
+            </div>
+            <div className="separator"></div>
+            <div className="adjusting-bar-container">
+              <input type="range" min="6" max="95" id="adjusting-bar" onChange={this.handleChange}/>
+            </div> 
+            <div className="separator"></div>
+            <div className="button-container">
+              <button onClick={() => this.mergeSort()}>Merge Sort</button>
+            </div>
         </div>
         </div>
       )}
@@ -145,7 +154,7 @@ export default class SortingVisualizer extends React.Component {
     this.items = items;
     this.drift_array = optionalDriftArray;
   }
-  function Animations() {
+  function Animations() { // This object contains all of "Animation" objects.
     this.animations_array = [];
     this.swapItems = function(item1, item2) {
       this.animations_array.push(new Animation("swap", [new ValueBar(item1.value, item1.index), new ValueBar(item2.value, item2.index)]));
@@ -194,4 +203,23 @@ export default class SortingVisualizer extends React.Component {
     }
     console.log(newArray);
     return newArray;
+  }
+
+
+  function width_interpolation(x){
+    let x1 = 6;
+    let x2 = 95;
+    let y1 = 4.2;
+    let y2 = .5;
+    //let result = y1 + (((x-x1)/(x2-x1))*(y2-y1));
+    let result = 20/x
+    return result;
+  }
+
+  function speed_interpolation(x){
+    let x1 = 6;
+    let x2 = 95;
+    let y1 = 500;
+    let y2 = 10;
+    return y1 + (((x-x1)/(x2-x1))*(y2-y1));
   }

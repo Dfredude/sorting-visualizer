@@ -1,19 +1,58 @@
 .array-container {
-    margin: auto;
-    width: 90%;
-    padding: 10px;
+  margin: auto;
+  position: relative;
+  width: 95%;
+  padding: 5px;
 }
 
 .array-bar {
-    width: .4vw;
-    background-color: blue;
-    display: inline-block;
-    margin: .3% .3%;
+  width: 0.4%;
+  background-color: blue;
+  display: inline-block;
+  margin: 0.3% 0.3%;
 }
 
-.buttons {
-    
-    position: relative;
-
+button {
+  font-size: 2vw;
+  margin-top: 6%;
+  align-self: center;
 }
 
+.button-container {
+  width: 30vw;
+  margin: 0px;
+  float: left;
+  height: 100%;
+  /*border: 5px solid coral;*/
+}
+.separator {
+  width: 1vw;
+  float: left;
+  height: 100%;
+  background-color: darkslateblue;
+}
+
+.adjusting-bar-container {
+  float: left;
+  width: 30%;
+  height: 100%;
+  /*border: 5px solid coral;*/
+}
+
+#adjusting-bar {
+  -webkit-appearance: none; /* Override default CSS styles */
+  width: 100%; /* Full-width */
+  height: 30%; /* Specified height */
+  margin-top: 3vh;
+  background: #d3d3d3; /* Grey background */
+  -webkit-transition: 0.2s; /* 0.2 seconds transition on hover */
+  transition: opacity 0.2s;
+}
+#interface {
+  position: fixed;
+  height: 20vh;
+  border-top: 5px solid darkslateblue;
+  bottom: 0px;
+  width: 100%;
+  background-color: darkturquoise;
+}
