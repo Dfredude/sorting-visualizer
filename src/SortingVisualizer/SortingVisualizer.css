@@ -1,7 +1,9 @@
 .array-container {
   margin: auto;
-  position: relative;
+  position: absolute;
+  bottom: 15%;
   width: 95%;
+  height: 85%;
   padding: 5px;
 }
 
@@ -10,49 +12,69 @@
   background-color: blue;
   display: inline-block;
   margin: 0.3% 0.3%;
+  vertical-align: top;
 }
 
 button {
-  font-size: 2vw;
-  margin-top: 6%;
+  border: none;
+  font-size: 2.5vh;
+  width: 45%;
+  height: 45%;
+  color: #f5f6fa;
   align-self: center;
+  background-color: #40739e;
+  border-radius: 5px;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
 
 .button-container {
-  width: 30vw;
+  position: relative;
+  width: 30.5%;
   margin: 0px;
   float: left;
   height: 100%;
   /*border: 5px solid coral;*/
 }
 .separator {
-  width: 1vw;
+  width: 0%;
   float: left;
-  height: 100%;
-  background-color: darkslateblue;
+  height: 80%;
+  background-color: #192a56;
 }
 
 .adjusting-bar-container {
   float: left;
-  width: 30%;
+  width: 38%;
   height: 100%;
+  background-color: #273c75;
   /*border: 5px solid coral;*/
 }
 
 #adjusting-bar {
-  -webkit-appearance: none; /* Override default CSS styles */
-  width: 100%; /* Full-width */
+  width: 70%; /* Full-width */
   height: 30%; /* Specified height */
   margin-top: 3vh;
   background: #d3d3d3; /* Grey background */
-  -webkit-transition: 0.2s; /* 0.2 seconds transition on hover */
+  /*-webkit-transition: 0.2s; /* 0.2 seconds transition on hover */
   transition: opacity 0.2s;
 }
 #interface {
   position: fixed;
-  height: 20vh;
-  border-top: 5px solid darkslateblue;
+  height: 15%;
+  border-top: 5px solid #192a56;
   bottom: 0px;
   width: 100%;
-  background-color: darkturquoise;
+  background-color: #273c75;
+}
+
+.text {
+  margin-top: 2%;
+  font-size: 2.7vh;
+  color: #d3d3d3;
+  font-style: italic;
 }

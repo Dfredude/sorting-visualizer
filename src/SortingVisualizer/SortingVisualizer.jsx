@@ -17,6 +17,8 @@ export default class SortingVisualizer extends React.Component {
         bars_width: .4
       };
       this.animation_speed = 10;
+      this.running = false;
+      this.ran = false;
     }
 
     componentDidMount(){
@@ -25,11 +27,22 @@ export default class SortingVisualizer extends React.Component {
   
     resetArray(){
       const array = [];
+      if (this.ran === true){
+        this.ran = false;
+        this.resetColors();
+      }
       for (let i = 0; i<this.state.amount_of_bars; i++) {
         let value = randomIntFromInterval(5,450);
         array.push(value);
       }
       this.setState({array});
+    }
+
+    resetColors(){
+      let bars = document.getElementsByClassName("array-bar")
+      for(let i=0; i<bars.length; i++){
+        bars[i].style.backgroundColor = defaultColor;
+      }
     }
     
     renderAnimations(animations) {
@@ -38,11 +51,16 @@ export default class SortingVisualizer extends React.Component {
       const arraybars = document.getElementsByClassName("array-bar");
       for(let i=0; i<len; i++) {
         let animation = animations_array[i];
+        if (i === len-1) {
+          setTimeout(() => {
+            this.running = false;
+            this.ran = true;
+          }, i * this.animation_speed)
+        }
         if (animation.type === 'compare') {
           const bar1Style = arraybars[animation.items[0].index].style;
           const bar2Style = arraybars[animation.items[1].index].style;
           setTimeout(() => {
-            console.log("Iteration: "+i);
             bar1Style.backgroundColor = comparingColor;
             bar2Style.backgroundColor = comparingColor;
             }, i * this.animation_speed
@@ -52,7 +70,6 @@ export default class SortingVisualizer extends React.Component {
           const bar1Style = arraybars[animation.items[0].index].style;
           const bar2Style = arraybars[animation.items[1].index].style;
           setTimeout(() => {
-            console.log("Iteration: "+i);
             bar1Style.backgroundColor = defaultColor;
             bar2Style.backgroundColor = defaultColor;
           }, i * this.animation_speed)
@@ -63,7 +80,6 @@ export default class SortingVisualizer extends React.Component {
           let height1 = animation.items[0].value;
           let height2 = animation.items[1].value;
           setTimeout(() => {
-            console.log("Iteration: "+i);
             bar1Style.height = `${height2/renderer}vh`;
             bar2Style.height = `${height1/renderer}vh`;
           }, i * this.animation_speed)
@@ -82,8 +98,6 @@ export default class SortingVisualizer extends React.Component {
             arraybarsvalues.push(drift_array[j].value);
           }
           setTimeout(() => {
-            console.log("Iteration: "+i);
-            console.log(startindex, lastindex)
             for(let k=startindex, l=0; k<lastindex; k++){
               bar1Style.height = `${height/renderer}vh`;
               let barStyle = arraybars[k+1].style;
@@ -92,35 +106,81 @@ export default class SortingVisualizer extends React.Component {
             }
           }, i * this.animation_speed)
         }
+        else if(animation.type === "set_last_merge_color"){
+          const bar1Style = arraybars[animation.items[0].index].style;
+          const bar2Style = arraybars[animation.items[1].index].style;
+          setTimeout(() => {
+            bar1Style.backgroundColor = "green";
+            bar2Style.backgroundColor = "green";
+          }, i * this.animation_speed)
+        }
+        else if(animation.type === "change_color"){
+          const barStyle = arraybars[animation.items[0].index].style;
+          setTimeout(() => {
+            barStyle.backgroundColor = "green";
+          }, i * this.animation_speed)
+        }
       }
     }
 
     mergeSort(){
       this.animations = new Animations();
       //This functions returns all animations within the animations object
-      mergeSortFuncRender(this.state.array, createValueBars(this.state.array), this.animations);
+      mergeSortFuncRender(this.state.array, createValueBars(this.state.array), this.animations, this.state.array.length);
       this.renderAnimations(this.animations);
+      this.disableInterface();
+      setTimeout(() => {
+        this.enableInterface()
+      }, (this.animations.animations_array.length+1) * this.animation_speed);
+    }
+
+    disableInterface(){
+      this.running = true;
+      let sorting_buttons = document.getElementsByClassName("sorting_buttons");
+      for(let i=0; i<sorting_buttons.length; i++){
+        sorting_buttons[i].setAttribute("disabled", "disabled");
+      }
+      let generate_array_button = document.getElementById("new-array-button");
+      generate_array_button.setAttribute("disabled", "disabled");
+      let slider = document.getElementById("adjusting-bar");
+      slider.setAttribute("disabled", "disabled");
+    }
+
+    enableInterface(){
+      let sorting_buttons = document.getElementsByClassName("sorting_buttons");
+      for(let i=0; i<sorting_buttons.length; i++){
+        sorting_buttons[i].removeAttribute("disabled");
+      }
+      let generate_array_button = document.getElementById("new-array-button");
+      generate_array_button.removeAttribute("disabled");
+      let slider = document.getElementById("adjusting-bar");
+      slider.removeAttribute("disabled");
     }
 
     handleChange(){
+      let prev_amount_of_bars = this.state.amount_of_bars;
       let value = document.getElementById("adjusting-bar").value;
-      let bars_width = width_interpolation(value);
-      console.log(bars_width);
+      //let bars_width = width_interpolation(value);
       let amount_of_bars = value;
-      this.setState((props) => {
+      this.setState(() => {
         return { amount_of_bars: amount_of_bars
                   }
       })
-      let bars = document.getElementsByClassName("array-bar")
-      for(let i=0; i<bars.length; i++){
-        bars[i].style.width = `${40/bars.length}%`;
-        //console.log(bars[i].style)
+      this.animation_speed = speed_interpolation(value);
+      this.resetArray();
+      const bars = document.getElementsByClassName("array-bar");
+      console.log(bars);
+      const bars_len = bars.length;
+      console.log(bars[bars_len])
+      for (let bar of bars) {
+        bar.style.width = `${40/bars.length}%`
       }
-      //bar_style.width = bars_width;
-      this.animation_speed = speed_interpolation(value)
       
-      this.resetArray()
-
+      //for(let i=0; i<bars_len; i++){
+      //  bars[i].style.width = `${40/bars.length}%`;
+      //}
+      //Bug Fixer
+      
     }
 
     render(){
@@ -134,15 +194,16 @@ export default class SortingVisualizer extends React.Component {
         </div>
         <div id="interface">
             <div className="button-container">
-              <button id="new-array-button" onClick={() => this.resetArray()}>Generate new array</button>
+              <button id="new-array-button" onClick={() => this.resetArray()}>New array</button>
             </div>
             <div className="separator"></div>
             <div className="adjusting-bar-container">
+              <div className="text">Change size and speed of the Array</div>
               <input type="range" min="6" max="95" id="adjusting-bar" onChange={this.handleChange}/>
             </div> 
             <div className="separator"></div>
             <div className="button-container">
-              <button onClick={() => this.mergeSort()}>Merge Sort</button>
+              <button className="sorting_buttons" onClick={() => this.mergeSort()}>Merge Sort</button>
             </div>
         </div>
         </div>
@@ -165,6 +226,12 @@ export default class SortingVisualizer extends React.Component {
     };
     this.overrideItems = function(item1, item2, arrayOfItemsToDrift) {
       this.animations_array.push(new Animation("override", [new ValueBar(item1.value, item1.index), new ValueBar(item2.value, item2.index)], copyArrayOfValueBars(arrayOfItemsToDrift)))
+    }
+    this.colorItems = function(item1, item2) {
+      this.animations_array.push(new Animation("set_last_merge_color", [new ValueBar(item1.value, item1.index), new ValueBar(item2.value, item2.index)]));
+    }
+    this.changeColor = function(item){
+      this.animations_array.push(new Animation("change_color", [item]))
     }
   }
 
@@ -201,7 +268,6 @@ export default class SortingVisualizer extends React.Component {
       let value_bar = arrayOfValueBars[i];
       newArray.push(new ValueBar(value_bar.value, value_bar.index));
     }
-    console.log(newArray);
     return newArray;
   }
 
@@ -219,7 +285,9 @@ export default class SortingVisualizer extends React.Component {
   function speed_interpolation(x){
     let x1 = 6;
     let x2 = 95;
-    let y1 = 500;
-    let y2 = 10;
-    return y1 + (((x-x1)/(x2-x1))*(y2-y1));
+    let y1 = 400;
+    let y2 = 5;
+    let result = 2.7/x*300
+    //let result = y1 + (((x-x1)/(x2-x1))*(y2-y1));
+    return result;
   }
