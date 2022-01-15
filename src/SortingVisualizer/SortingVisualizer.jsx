@@ -13,9 +13,9 @@ export default class SortingVisualizer extends React.Component {
 
       this.state = {
         array: [],
-        amount_of_bars: 95,
         bars_width: .4
       };
+      this.amount_of_bars = 95;
       this.animation_speed = 10;
       this.running = false;
       this.ran = false;
@@ -34,14 +34,14 @@ export default class SortingVisualizer extends React.Component {
         for(let i=0; i<bars.length; i++){
           bars[i].style.width = `${new_width}%`;
         }
-      if (this.state.amount_of_bars < 13){
-        let bar_texts = document.getElementsByClassName("array-bar-text");
-        let bars = document.getElementsByClassName("array-bar");
-        for (let i=0; i<bar_texts.length; i++){
-          bar_texts[i].textContent = bars[i].style.height.slice(0,-2);
-        }
-        this.status_bar_values_text = true;
-      }
+      //if (this.amount_of_bars < 13){
+      //  let bar_texts = document.getElementsByClassName("array-bar-text");
+      //  let bars = document.getElementsByClassName("array-bar");
+      //  for (let i=0; i<bar_texts.length; i++){
+      //    bar_texts[i].textContent = bars[i].style.height.slice(0,-2);
+      //  }
+      //  this.status_bar_values_text = true;
+      //}
       this.changed = false;
       }
     }
@@ -52,13 +52,13 @@ export default class SortingVisualizer extends React.Component {
         this.ran = false;
         this.resetColors();
       }
-      for (let i = 0; i<this.state.amount_of_bars; i++) {
+      for (let i = 0; i<this.amount_of_bars; i++) {
         let value = randomIntFromInterval(20,450);
         array.push(value);
       }
       this.setState({array});
       if (this.status_bar_values_text){
-        if (this.state.amount_of_bars > 12){
+        if (this.amount_of_bars > 12){
           let bar_texts = document.getElementsByClassName("array-bar-text");
           let bars = document.getElementsByClassName("array-bar");
           for (let i=0; i<bar_texts.length; i++){
@@ -66,6 +66,7 @@ export default class SortingVisualizer extends React.Component {
           }
         }
       }
+      this.changed = true;
     }
 
     resetColors(){
@@ -194,12 +195,10 @@ export default class SortingVisualizer extends React.Component {
 
     handleChange(){
       let value = document.getElementById("adjusting-bar").value;
+      console.log("Slider value is: "+value)
       //let bars_width = width_interpolation(value);
-      let amount_of_bars = value;
-      this.setState(() => {
-        return { amount_of_bars: amount_of_bars
-                  }
-      })
+      this.amount_of_bars = value;
+      console.log("The value set to amount of bars is: "+this.amount_of_bars)
       this.resetArray();
       this.animation_speed = speed_interpolation(value);
       this.changed = true;
@@ -209,6 +208,7 @@ export default class SortingVisualizer extends React.Component {
 
     render(){
       const {array} = this.state;
+      console.log("Array len in render: "+array.length)
       return (<div className="application">
         <div className="array-container">
         {array.map((value, idx) => (
