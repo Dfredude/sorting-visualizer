@@ -4,7 +4,7 @@ import './SortingVisualizer.css';
 
 const defaultColor = 'blue';
 const comparingColor = 'red';
-const renderer = 5.5;
+const renderer = 5.7;
 
 export default class SortingVisualizer extends React.Component {
     constructor(props) {
@@ -19,12 +19,28 @@ export default class SortingVisualizer extends React.Component {
       this.animation_speed = 10;
       this.running = false;
       this.ran = false;
+      this.changed = false;
     }
 
     componentDidMount(){
       this.resetArray();
     }
-  
+    
+    componentDidUpdate(){
+      if (this.changed=== true){
+        const bars = document.getElementsByClassName("array-bar");
+      for(let i=0; i<bars.length; i++){
+        const new_width = 40/bars.length;
+        bars[i].style.width = `${new_width}%`;
+        //if (new_width > 1.66){
+        //  bars[i].appendChild(bars[i].index)
+        //}
+      }
+      }
+      
+
+    }
+
     resetArray(){
       const array = [];
       if (this.ran === true){
@@ -158,7 +174,7 @@ export default class SortingVisualizer extends React.Component {
     }
 
     handleChange(){
-      let prev_amount_of_bars = this.state.amount_of_bars;
+      const prev_amount_of_bars = this.state.amount_of_bars;
       let value = document.getElementById("adjusting-bar").value;
       //let bars_width = width_interpolation(value);
       let amount_of_bars = value;
@@ -166,29 +182,21 @@ export default class SortingVisualizer extends React.Component {
         return { amount_of_bars: amount_of_bars
                   }
       })
-      this.animation_speed = speed_interpolation(value);
       this.resetArray();
-      const bars = document.getElementsByClassName("array-bar");
-      console.log(bars);
-      const bars_len = bars.length;
-      console.log(bars[bars_len])
-      for (let bar of bars) {
-        bar.style.width = `${40/bars.length}%`
-      }
-      
-      //for(let i=0; i<bars_len; i++){
-      //  bars[i].style.width = `${40/bars.length}%`;
-      //}
+      this.animation_speed = speed_interpolation(value);
+      this.changed = true;
       //Bug Fixer
       
     }
 
     render(){
       const {array} = this.state;
+      const bars = document.getElementsByClassName("array-bar");
       return (<div className="application">
         <div className="array-container">
         {array.map((value, idx) => (
           <div className="array-bar" key={idx} style={{height: `${Math.floor(value/renderer)}vh`}}>
+            {idx}
           </div>
         ))}
         </div>
@@ -199,7 +207,7 @@ export default class SortingVisualizer extends React.Component {
             <div className="separator"></div>
             <div className="adjusting-bar-container">
               <div className="text">Change size and speed of the Array</div>
-              <input type="range" min="6" max="95" id="adjusting-bar" onChange={this.handleChange}/>
+              <input type="range" min="6" max="95" id="adjusting-bar" onChange={() => this.handleChange()}/>
             </div> 
             <div className="separator"></div>
             <div className="button-container">

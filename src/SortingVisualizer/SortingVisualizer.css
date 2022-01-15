@@ -13,13 +13,14 @@
   display: inline-block;
   margin: 0.3% 0.3%;
   vertical-align: top;
+  font-size: 50%;
 }
 
 button {
   border: none;
   font-size: 2.5vh;
-  width: 45%;
-  height: 45%;
+  width: 50%;
+  height: 50%;
   color: #f5f6fa;
   align-self: center;
   background-color: #40739e;
@@ -74,7 +75,7 @@ button {
 
 .text {
   margin-top: 2%;
-  font-size: 2.7vh;
+  font-size: 2.5vh;
   color: #d3d3d3;
   font-style: italic;
 }
