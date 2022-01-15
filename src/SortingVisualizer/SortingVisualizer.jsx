@@ -4,7 +4,7 @@ import './SortingVisualizer.css';
 
 const defaultColor = 'blue';
 const comparingColor = 'red';
-const renderer = 5.7;
+const renderer = 6;
 
 export default class SortingVisualizer extends React.Component {
     constructor(props) {
@@ -20,6 +20,7 @@ export default class SortingVisualizer extends React.Component {
       this.running = false;
       this.ran = false;
       this.changed = false;
+      this.status_bar_values_text = false;
     }
 
     componentDidMount(){
@@ -29,16 +30,20 @@ export default class SortingVisualizer extends React.Component {
     componentDidUpdate(){
       if (this.changed=== true){
         const bars = document.getElementsByClassName("array-bar");
-      for(let i=0; i<bars.length; i++){
         const new_width = 40/bars.length;
-        bars[i].style.width = `${new_width}%`;
-        //if (new_width > 1.66){
-        //  bars[i].appendChild(bars[i].index)
-        //}
+        for(let i=0; i<bars.length; i++){
+          bars[i].style.width = `${new_width}%`;
+        }
+      if (this.state.amount_of_bars < 13){
+        let bar_texts = document.getElementsByClassName("array-bar-text");
+        let bars = document.getElementsByClassName("array-bar");
+        for (let i=0; i<bar_texts.length; i++){
+          bar_texts[i].textContent = bars[i].style.height.slice(0,-2);
+        }
+        this.status_bar_values_text = true;
       }
+      this.changed = false;
       }
-      
-
     }
 
     resetArray(){
@@ -48,10 +53,19 @@ export default class SortingVisualizer extends React.Component {
         this.resetColors();
       }
       for (let i = 0; i<this.state.amount_of_bars; i++) {
-        let value = randomIntFromInterval(5,450);
+        let value = randomIntFromInterval(20,450);
         array.push(value);
       }
       this.setState({array});
+      if (this.status_bar_values_text){
+        if (this.state.amount_of_bars > 12){
+          let bar_texts = document.getElementsByClassName("array-bar-text");
+          let bars = document.getElementsByClassName("array-bar");
+          for (let i=0; i<bar_texts.length; i++){
+            bar_texts[i].textContent = null;
+          }
+        }
+      }
     }
 
     resetColors(){
@@ -91,8 +105,10 @@ export default class SortingVisualizer extends React.Component {
           }, i * this.animation_speed)
         }
         else if (animation.type === 'swap') {
-          const bar1Style = arraybars[animation.items[0].index].style;
-          const bar2Style = arraybars[animation.items[1].index].style;
+          const bar1 = arraybars[animation.items[0].index];
+          const bar2 = arraybars[animation.items[1].index];
+          const bar1Style = bar1.style;
+          const bar2Style = bar2.style;
           let height1 = animation.items[0].value;
           let height2 = animation.items[1].value;
           setTimeout(() => {
@@ -142,6 +158,9 @@ export default class SortingVisualizer extends React.Component {
     mergeSort(){
       this.animations = new Animations();
       //This functions returns all animations within the animations object
+      if (document.getElementsByClassName('bar-value').length>0){
+        this.status_bar_values_text = true;
+      }
       mergeSortFuncRender(this.state.array, createValueBars(this.state.array), this.animations, this.state.array.length);
       this.renderAnimations(this.animations);
       this.disableInterface();
@@ -174,7 +193,6 @@ export default class SortingVisualizer extends React.Component {
     }
 
     handleChange(){
-      const prev_amount_of_bars = this.state.amount_of_bars;
       let value = document.getElementById("adjusting-bar").value;
       //let bars_width = width_interpolation(value);
       let amount_of_bars = value;
@@ -191,12 +209,11 @@ export default class SortingVisualizer extends React.Component {
 
     render(){
       const {array} = this.state;
-      const bars = document.getElementsByClassName("array-bar");
       return (<div className="application">
         <div className="array-container">
         {array.map((value, idx) => (
-          <div className="array-bar" key={idx} style={{height: `${Math.floor(value/renderer)}vh`}}>
-            {idx}
+          <div className="array-bar" id={idx} key={idx} style={{height: `${Math.floor(value/renderer)}vh`}}>
+            <div className="array-bar-text"></div>
           </div>
         ))}
         </div>
@@ -207,7 +224,7 @@ export default class SortingVisualizer extends React.Component {
             <div className="separator"></div>
             <div className="adjusting-bar-container">
               <div className="text">Change size and speed of the Array</div>
-              <input type="range" min="6" max="95" id="adjusting-bar" onChange={() => this.handleChange()}/>
+              <input type="range" min="3" max="95" id="adjusting-bar" onChange={() => this.handleChange()}/>
             </div> 
             <div className="separator"></div>
             <div className="button-container">

@@ -57,7 +57,7 @@ button {
 }
 
 #adjusting-bar {
-  width: 70%; /* Full-width */
+  width: 60%; /* Full-width */
   height: 30%; /* Specified height */
   margin-top: 3vh;
   background: #d3d3d3; /* Grey background */
@@ -78,4 +78,9 @@ button {
   font-size: 2.5vh;
   color: #d3d3d3;
   font-style: italic;
+}
+
+.array-bar-text {
+  font-size: 300%;
+  color: #f5f6fa;
 }
