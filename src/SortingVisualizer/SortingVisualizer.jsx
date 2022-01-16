@@ -50,6 +50,7 @@ export default class SortingVisualizer extends React.Component {
       if (this.ran === true){
         this.ran = false;
         this.resetColors();
+        this.enableInterface();
       }
       for (let i = 0; i<this.amount_of_bars; i++) {
         let value = randomIntFromInterval(15,300);
@@ -203,12 +204,15 @@ export default class SortingVisualizer extends React.Component {
       generate_array_button.setAttribute("disabled", "disabled");
       let slider = document.getElementById("adjusting-bar");
       slider.setAttribute("disabled", "disabled");
+      this.ran = true;
     }
 
     enableInterface(){
-      let sorting_buttons = document.getElementsByClassName("sorting-buttons");
-      for(let i=0; i<sorting_buttons.length; i++){
-        sorting_buttons[i].removeAttribute("disabled");
+      if (this.ran === false){
+        let sorting_buttons = document.getElementsByClassName("sorting-buttons");
+        for(let i=0; i<sorting_buttons.length; i++){
+          sorting_buttons[i].removeAttribute("disabled");
+        }
       }
       let generate_array_button = document.getElementById("new-array-button");
       generate_array_button.removeAttribute("disabled");
@@ -251,8 +255,8 @@ export default class SortingVisualizer extends React.Component {
             </div> 
             <div className="separator"></div>
             <div className="algorithms-button-container">
-              <button className="sorting-buttons" onClick={() => this.mergeSort()}>Merge Sort</button>
-              <button className="sorting-buttons" onClick={() => this.selectionSort()}>Selection Sort</button>
+              <button className="sorting-buttons" onClick={() => this.mergeSort()}>Merge Sort <div className="time-complexity">O(n•Log n)</div></button>
+              <button className="sorting-buttons" onClick={() => this.selectionSort()}>Selection Sort <div className="time-complexity">O(n<sup>2</sup>)</div></button>
             </div>
         </div>
         </div>

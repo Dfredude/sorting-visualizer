@@ -105,15 +105,15 @@ export function selectionSortRender(values_array, animations){
     while (values_array_copy.length > 0){
         let min = values_array_copy[0];
         //Initiating smallest value
-        animations.changeColor(new ValueBar(min.value, sorted), "purple");
+        animations.changeColor(new ValueBar(min.value, sorted), "#fbc531");//Yellow
         for(let i=1; i<values_array_copy.length;i++){
             let item = values_array_copy[i];
             animations.changeColor(new ValueBar(item.value, sorted+i), "red");
             if(item.value < min.value){
-                animations.changeColors([new ValueBar(min.value, sorted+min.index), new ValueBar(item.value, sorted+i)], ['yellow', 'yellow']);
-                animations.changeColors([new ValueBar(min.value, sorted+min.index), new ValueBar(item.value, sorted+i)], ['yellow', 'yellow']);
-                animations.changeColors([new ValueBar(min.value, sorted+min.index), new ValueBar(item.value, sorted+i)], ['blue', 'blue']);
-                animations.changeColor(new ValueBar(item.value, sorted+i), "purple")
+                animations.changeColor(new ValueBar(item.value, sorted+i), "#9c88ff"); //Purple
+                animations.changeColor(new ValueBar(item.value, sorted+i), "#blue");
+                animations.changeColor(new ValueBar(item.value, sorted+i), "#9c88ff");
+                animations.changeColors([new ValueBar(min.value, sorted+min.index), new ValueBar(item.value, sorted+i)], ['blue', '#fbc531']);
                 
                 min = item;
                 
@@ -123,8 +123,14 @@ export function selectionSortRender(values_array, animations){
             }
         }
         //animations.changeColors([new ValueBar(min.value, sorted+min.index), new ValueBar(item.value, sorted+i)], ['blue', 'yellow']);
+        animations.changeColor(new ValueBar(min.value, sorted+min.index), "#44bd32");
+        animations.changeColor(new ValueBar(min.value, sorted+min.index), "blue");
+        animations.changeColor(new ValueBar(min.value, sorted+min.index), "#44bd32");
+        animations.changeColor(new ValueBar(min.value, sorted+min.index), "blue");
+        animations.changeColor(new ValueBar(min.value, sorted+min.index), "#44bd32");
+        animations.changeColor(new ValueBar(min.value, sorted+min.index), "blue");
         animations.overrideItems(new ValueBar(values_array_copy[0], sorted), new ValueBar(min.value, sorted+min.index), values_array_copy)
-        animations.changeColor(new ValueBar(min.value, sorted), "green")
+        animations.changeColor(new ValueBar(min.value, sorted), "#44bd32")
         if (min.index+sorted != sorted){
             animations.changeColor(new ValueBar(min.value, sorted+min.index), "blue")
         }
@@ -137,6 +143,10 @@ export function selectionSortRender(values_array, animations){
         new_index++;
     }  
     return new_array;   
+}
+
+export function quickSort(array){
+    
 }
 
 export function ValueBar(value, index){
