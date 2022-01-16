@@ -16,7 +16,7 @@
   font-size: 50%;
 }
 
-button {
+#new-array-button {
   border: none;
   font-size: 2.5vh;
   width: 60%;
@@ -35,12 +35,34 @@ button {
 
 .button-container {
   position: relative;
-  width: 30.5%;
+  width: 21%;
   margin: 0px;
   float: left;
   height: 100%;
   /*border: 5px solid coral;*/
 }
+
+.algorithms-button-container {
+  position: relative;
+  width: 40%;
+  margin: 0px;
+  float: left;
+  height: 100%;
+  /*border: 5px solid coral;*/
+}
+
+.sorting-buttons {
+  border: none;
+  font-size: 2.5vh;
+  width: 45%;
+  height: 45%;
+  margin: 5pt;
+  color: #f5f6fa;
+  background-color: #40739e;
+  border-radius: 5px;
+  /*margin: auto;*/
+}
+
 .separator {
   width: 0%;
   float: left;

@@ -1,5 +1,5 @@
 import React from "react";
-import { mergeSortFunc, mergeSortFuncRender, createValueBars, ValueBar } from "../SortingAlgorithms/SortingAlgorithms";
+import { selectionSortRender, mergeSortFuncRender, createValueBars, ValueBar } from "../SortingAlgorithms/SortingAlgorithms";
 import './SortingVisualizer.css';
 
 const defaultColor = 'blue';
@@ -144,28 +144,29 @@ export default class SortingVisualizer extends React.Component {
               let barStyle = arraybars[k+1].style;
               barStyle.height = `${Math.floor(arraybarsvalues[l]/renderer)}vh`;
               if (this.status_bar_values_text){
-                console.log(arraybars[k+1])
                 let bar_text  = arraybars[k+1].getElementsByClassName("array-bar-text")[0];
                 bar_text.textContent = arraybarsvalues[l];
-                console.log("This array bar was assigned height of "+ height)
               }
               l++; 
             }
           }, i * this.animation_speed)
         }
-        else if(animation.type === "set_last_merge_color"){
-          const bar1Style = arraybars[animation.items[0].index].style;
-          const bar2Style = arraybars[animation.items[1].index].style;
-          setTimeout(() => {
-            bar1Style.backgroundColor = "green";
-            bar2Style.backgroundColor = "green";
-          }, i * this.animation_speed)
-        }
         else if(animation.type === "change_color"){
           const barStyle = arraybars[animation.items[0].index].style;
           setTimeout(() => {
-            barStyle.backgroundColor = "green";
+            barStyle.backgroundColor = animation.newColor;
           }, i * this.animation_speed)
+        }
+        else if(animation.type === "change-colors"){
+          let items = animation.items;
+          let colors = animation.newColor;
+          setTimeout(() => {
+            for(let j=0; j<items.length; j++){
+              let bar_style = arraybars[items[j].index].style;
+              let color = colors[j];
+              bar_style.backgroundColor = color;
+            }
+          }, i*this.animation_speed)
         }
       }
     }
@@ -181,9 +182,20 @@ export default class SortingVisualizer extends React.Component {
       }, (this.animations.animations_array.length+1) * this.animation_speed);
     }
 
+    selectionSort(){
+      this.animations = new Animations();
+      selectionSortRender(createValueBars(this.state.array), this.animations);
+      console.log(this.animations);
+      this.renderAnimations(this.animations);
+      this.disableInterface();
+      setTimeout(() => {
+        this.enableInterface()
+      }, (this.animations.animations_array.length+1) * this.animation_speed);
+    }
+
     disableInterface(){
       this.running = true;
-      let sorting_buttons = document.getElementsByClassName("sorting_buttons");
+      let sorting_buttons = document.getElementsByClassName("sorting-buttons");
       for(let i=0; i<sorting_buttons.length; i++){
         sorting_buttons[i].setAttribute("disabled", "disabled");
       }
@@ -194,7 +206,7 @@ export default class SortingVisualizer extends React.Component {
     }
 
     enableInterface(){
-      let sorting_buttons = document.getElementsByClassName("sorting_buttons");
+      let sorting_buttons = document.getElementsByClassName("sorting-buttons");
       for(let i=0; i<sorting_buttons.length; i++){
         sorting_buttons[i].removeAttribute("disabled");
       }
@@ -238,18 +250,20 @@ export default class SortingVisualizer extends React.Component {
               <input type="range" min="3" max="95" id="adjusting-bar" onChange={() => this.handleChange()}/>
             </div> 
             <div className="separator"></div>
-            <div className="button-container">
-              <button className="sorting_buttons" onClick={() => this.mergeSort()}>Merge Sort</button>
+            <div className="algorithms-button-container">
+              <button className="sorting-buttons" onClick={() => this.mergeSort()}>Merge Sort</button>
+              <button className="sorting-buttons" onClick={() => this.selectionSort()}>Selection Sort</button>
             </div>
         </div>
         </div>
       )}
   }
   
-  function Animation(type, items, optionalDriftArray) {
+  function Animation(type, items, optionalDriftArray, color) {
     this.type = type;
     this.items = items;
     this.drift_array = optionalDriftArray;
+    this.newColor = color;
   }
   function Animations() { // This object contains all of "Animation" objects.
     this.animations_array = [];
@@ -266,8 +280,11 @@ export default class SortingVisualizer extends React.Component {
     this.colorItems = function(item1, item2) {
       this.animations_array.push(new Animation("set_last_merge_color", [new ValueBar(item1.value, item1.index), new ValueBar(item2.value, item2.index)]));
     }
-    this.changeColor = function(item){
-      this.animations_array.push(new Animation("change_color", [item]))
+    this.changeColor = function(item, color){
+      this.animations_array.push(new Animation("change_color", [item], null, color))
+    }
+    this.changeColors = function(items, colors){
+      this.animations_array.push(new Animation("change-colors", items, null, colors))
     }
   }
 
@@ -323,7 +340,7 @@ export default class SortingVisualizer extends React.Component {
     let x2 = 95;
     let y1 = 400;
     let y2 = 5;
-    let result = 2.8/x*300 //2.7 is the good one
+    let result = 3/x*300 //2.7 is the good one
     //let result = y1 + (((x-x1)/(x2-x1))*(y2-y1));
     return result;
   }
