@@ -4,7 +4,7 @@ import './SortingVisualizer.css';
 
 const defaultColor = 'blue';
 const comparingColor = 'red';
-const renderer = 6;
+const renderer = 4;
 
 export default class SortingVisualizer extends React.Component {
     constructor(props) {
@@ -34,14 +34,13 @@ export default class SortingVisualizer extends React.Component {
         for(let i=0; i<bars.length; i++){
           bars[i].style.width = `${new_width}%`;
         }
-      //if (this.amount_of_bars < 13){
-      //  let bar_texts = document.getElementsByClassName("array-bar-text");
-      //  let bars = document.getElementsByClassName("array-bar");
-      //  for (let i=0; i<bar_texts.length; i++){
-      //    bar_texts[i].textContent = bars[i].style.height.slice(0,-2);
-      //  }
-      //  this.status_bar_values_text = true;
-      //}
+        if (this.amount_of_bars < 13){
+          let bar_texts = document.getElementsByClassName("array-bar-text");
+          for (let i=0; i<bar_texts.length; i++){
+            bar_texts[i].textContent = this.state.array[i];
+          }
+          this.status_bar_values_text = true;
+        }
       this.changed = false;
       }
     }
@@ -53,7 +52,7 @@ export default class SortingVisualizer extends React.Component {
         this.resetColors();
       }
       for (let i = 0; i<this.amount_of_bars; i++) {
-        let value = randomIntFromInterval(20,450);
+        let value = randomIntFromInterval(15,300);
         array.push(value);
       }
       this.setState({array});
@@ -113,8 +112,14 @@ export default class SortingVisualizer extends React.Component {
           let height1 = animation.items[0].value;
           let height2 = animation.items[1].value;
           setTimeout(() => {
-            bar1Style.height = `${height2/renderer}vh`;
-            bar2Style.height = `${height1/renderer}vh`;
+            bar1Style.height = `${Math.floor(height2/renderer)}vh`;
+            bar2Style.height = `${Math.floor(height1/renderer)}vh`;
+            if (this.status_bar_values_text){
+              const bar1_text = bar1.getElementsByClassName("array-bar-text")[0];
+              const bar2_text = bar2.getElementsByClassName("array-bar-text")[0];
+              bar1_text.textContent = height2;
+              bar2_text.textContent = height1;
+            }
           }, i * this.animation_speed)
         }
         else if (animation.type === "override") {
@@ -131,10 +136,19 @@ export default class SortingVisualizer extends React.Component {
             arraybarsvalues.push(drift_array[j].value);
           }
           setTimeout(() => {
+            bar1Style.height = `${height/renderer}vh`;
+            if (this.status_bar_values_text){
+              arraybars[item1.index].getElementsByClassName("array-bar-text")[0].textContent = height;
+            }
             for(let k=startindex, l=0; k<lastindex; k++){
-              bar1Style.height = `${height/renderer}vh`;
               let barStyle = arraybars[k+1].style;
-              barStyle.height = `${arraybarsvalues[l]/renderer}vh`;
+              barStyle.height = `${Math.floor(arraybarsvalues[l]/renderer)}vh`;
+              if (this.status_bar_values_text){
+                console.log(arraybars[k+1])
+                let bar_text  = arraybars[k+1].getElementsByClassName("array-bar-text")[0];
+                bar_text.textContent = arraybarsvalues[l];
+                console.log("This array bar was assigned height of "+ height)
+              }
               l++; 
             }
           }, i * this.animation_speed)
@@ -159,9 +173,6 @@ export default class SortingVisualizer extends React.Component {
     mergeSort(){
       this.animations = new Animations();
       //This functions returns all animations within the animations object
-      if (document.getElementsByClassName('bar-value').length>0){
-        this.status_bar_values_text = true;
-      }
       mergeSortFuncRender(this.state.array, createValueBars(this.state.array), this.animations, this.state.array.length);
       this.renderAnimations(this.animations);
       this.disableInterface();
@@ -195,11 +206,12 @@ export default class SortingVisualizer extends React.Component {
 
     handleChange(){
       let value = document.getElementById("adjusting-bar").value;
-      console.log("Slider value is: "+value)
       //let bars_width = width_interpolation(value);
       this.amount_of_bars = value;
-      console.log("The value set to amount of bars is: "+this.amount_of_bars)
       this.resetArray();
+      if (this.amount_of_bars > 12){
+        this.status_bar_values_text = false;
+      }
       this.animation_speed = speed_interpolation(value);
       this.changed = true;
       //Bug Fixer
@@ -208,7 +220,6 @@ export default class SortingVisualizer extends React.Component {
 
     render(){
       const {array} = this.state;
-      console.log("Array len in render: "+array.length)
       return (<div className="application">
         <div className="array-container">
         {array.map((value, idx) => (
@@ -312,7 +323,7 @@ export default class SortingVisualizer extends React.Component {
     let x2 = 95;
     let y1 = 400;
     let y2 = 5;
-    let result = 2.7/x*300
+    let result = 2.8/x*300 //2.7 is the good one
     //let result = y1 + (((x-x1)/(x2-x1))*(y2-y1));
     return result;
   }
