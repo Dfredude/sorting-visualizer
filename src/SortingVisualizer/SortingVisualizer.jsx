@@ -198,6 +198,7 @@ export default class SortingVisualizer extends React.Component {
       this.running = true;
       let sorting_buttons = document.getElementsByClassName("sorting-buttons");
       for(let i=0; i<sorting_buttons.length; i++){
+        console.log("Disabled", sorting_buttons[i]);
         sorting_buttons[i].setAttribute("disabled", "disabled");
       }
       let generate_array_button = document.getElementById("new-array-button");
@@ -211,7 +212,9 @@ export default class SortingVisualizer extends React.Component {
       if (this.ran === false){
         let sorting_buttons = document.getElementsByClassName("sorting-buttons");
         for(let i=0; i<sorting_buttons.length; i++){
+          console.log("Enabled", sorting_buttons[i]);
           sorting_buttons[i].removeAttribute("disabled");
+
         }
       }
       let generate_array_button = document.getElementById("new-array-button");
