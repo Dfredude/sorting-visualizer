@@ -13,7 +13,9 @@ export default class SortingVisualizer extends React.Component {
 
       this.state = {
         array: [],
-        bars_width: .4
+        bars_width: .4,
+        buttons_disabled: false,
+        gen_new_array_disabled: false
       };
       this.amount_of_bars = 95;
       this.animation_speed = 10;
@@ -196,31 +198,22 @@ export default class SortingVisualizer extends React.Component {
 
     disableInterface(){
       this.running = true;
-      let sorting_buttons = document.getElementsByClassName("sorting-buttons");
-      for(let i=0; i<sorting_buttons.length; i++){
-        console.log("Disabled", sorting_buttons[i]);
-        sorting_buttons[i].setAttribute("disabled", "disabled");
-      }
-      let generate_array_button = document.getElementById("new-array-button");
-      generate_array_button.setAttribute("disabled", "disabled");
-      let slider = document.getElementById("adjusting-bar");
-      slider.setAttribute("disabled", "disabled");
+      this.setState({
+        buttons_disabled: true,
+        gen_new_array_disabled: true
+      })
       this.ran = true;
     }
 
     enableInterface(){
       if (this.ran === false){
-        let sorting_buttons = document.getElementsByClassName("sorting-buttons");
-        for(let i=0; i<sorting_buttons.length; i++){
-          console.log("Enabled", sorting_buttons[i]);
-          sorting_buttons[i].removeAttribute("disabled");
-
-        }
+        this.setState({
+          buttons_disabled:false,
+        })
       }
-      let generate_array_button = document.getElementById("new-array-button");
-      generate_array_button.removeAttribute("disabled");
-      let slider = document.getElementById("adjusting-bar");
-      slider.removeAttribute("disabled");
+      this.setState({
+        gen_new_array_disabled: false
+      })
     }
 
     handleChange(){
@@ -249,17 +242,17 @@ export default class SortingVisualizer extends React.Component {
         </div>
         <div id="interface">
             <div className="button-container">
-              <button id="new-array-button" onClick={() => this.resetArray()}>New array</button>
+              <button id="new-array-button" onClick={() => this.resetArray()} disabled={this.state.gen_new_array_disabled}>New array</button>
             </div>
             <div className="separator"></div>
             <div className="adjusting-bar-container">
               <div className="text">Change size and speed of the Array</div>
-              <input type="range" min="3" max="95" id="adjusting-bar" onChange={() => this.handleChange()}/>
+              <input type="range" min="3" max="95" id="adjusting-bar" onChange={() => this.handleChange()} disabled={this.state.gen_new_array_disabled}/>
             </div> 
             <div className="separator"></div>
             <div className="algorithms-button-container">
-              <button className="sorting-buttons" onClick={() => this.mergeSort()}>Merge Sort <div className="time-complexity">O(n•Log n)</div></button>
-              <button className="sorting-buttons" onClick={() => this.selectionSort()}>Selection Sort <div className="time-complexity">O(n<sup>2</sup>)</div></button>
+              <button className="sorting-buttons" onClick={() => this.mergeSort()} disabled={this.state.buttons_disabled}>Merge Sort <div className="time-complexity">O(n•Log n)</div></button>
+              <button className="sorting-buttons" onClick={() => this.selectionSort()} disabled={this.state.buttons_disabled}>Selection Sort <div className="time-complexity">O(n<sup>2</sup>)</div></button>
             </div>
         </div>
         </div>
