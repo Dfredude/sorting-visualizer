@@ -1,4 +1,5 @@
 import { calculateNewValue } from "@testing-library/user-event/dist/utils";
+import { convertObjectsArrayToIntsArray } from "../SortingVisualizer/SortingVisualizer"
 
 //Function used in main jsx App
 export function mergeSortFuncRender(array, array_of_objects, animations, total_length) {
@@ -110,9 +111,8 @@ export function selectionSortRender(values_array, animations){
             let item = values_array_copy[i];
             animations.changeColor(new ValueBar(item.value, sorted+i), "red");
             if(item.value < min.value){
-                animations.changeColor(new ValueBar(item.value, sorted+i), "#9c88ff"); //Purple
                 animations.changeColor(new ValueBar(item.value, sorted+i), "#blue");
-                animations.changeColor(new ValueBar(item.value, sorted+i), "#9c88ff");
+                animations.changeColor(new ValueBar(item.value, sorted+i), "#9c88ff"); //Purple
                 animations.changeColors([new ValueBar(min.value, sorted+min.index), new ValueBar(item.value, sorted+i)], ['blue', '#fbc531']);
                 
                 min = item;
@@ -145,8 +145,132 @@ export function selectionSortRender(values_array, animations){
     return new_array;   
 }
 
-export function quickSort(array){
+export function bubbleSortRender(array, animations){
+    let array_copy = convertObjectsArrayToIntsArray(array);
+    let len = array_copy.length;
+    let sorted_array = [];
+    for(let i=0; i<len; i++){
+        for(let j=0; j<array_copy.length-1; j++){
+            animations.compareItems(new ValueBar(array_copy[j], j), new ValueBar(array_copy[j+1], j+1))
+            if (array_copy[j] > array_copy[j+1]){
+                //console.log(array_copy[j],j)
+                animations.swapItems(new ValueBar(array_copy[j], j), new ValueBar(array_copy[j+1], j+1))
+                const temp1 = array_copy[j];
+                const temp2 = array_copy[j+1];
+                array_copy[j] = temp2;
+                array_copy[j+1] = temp1;
+            }
+        }
+        let item_sorted = new ValueBar(array_copy.pop(), array_copy.length);
+        animations.changeColor(item_sorted, "#44bd32")
+        sorted_array.unshift(item_sorted);
+    }
+    return sorted_array;
+}
+
+export function bubbleSort(array){
+    let array_copy = convertObjectsArrayToIntsArray(array);
+    let len = array_copy.length;
+    let sorted_array = [];
+    for(let i=0; i<len; i++){
+        for(let j=0; j<array_copy.length; j++){
+            if (array_copy[j] > array_copy[j+1]){
+                const temp1 = array_copy[j];
+                const temp2 = array_copy[j+1];
+                array_copy[j] = temp2;
+                array_copy[j+1] = temp1;
+            }
+        }
+        sorted_array.unshift(new ValueBar(array_copy.pop(), array_copy.length))
+    }
+    return sorted_array;
+}
+
+export function heapSort(array, animations){
+    //array = [2,8,5,3,9,1];
+    //array = [1,8,5,3,2,9];
+    let sorted_array = []
+    let len = array.length;
+    //console.log(array);
+    buildMaxHeap(array, animations);
+    console.log(animations)
+    //console.log("Max heap: ",array);
+    for(let i=len-1; i>=0; i--){
+        swapTwoArraysValues(array, 0, i, animations);
+        let sorted_value = array.pop()
+        animations.changeColor(new ValueBar(sorted_value, i), "#44bd32")
+        sorted_array.unshift(sorted_value)
+        //console.log("After first loop's swap: "+array)
+        //len--;
+        heapify(array, 0, animations);
+        //console.log(array);
+        //console.log("After loop:"+array)
+    }
+    animations.changeColor(new ValueBar(sorted_array[0], 0), "#44bd32")
+    //console.log("Sorted: ",array)
+    //heapify(array, 0);
+    //console.log(sorted_array);
+    return sorted_array
+
+}
+
+function buildMaxHeap(array, animations){
+    const len = array.length;
+    for(let i=Math.floor(len/2); i>=0; i--) heapify(array, i, animations);
+}
+
+function heapify(array, index, animations){
+    const left = 2*index+1;
+    const right = 2*index+2;
+    let right_value = array[right];
+    let left_value = array[left]
+    //console.log("left: "+ array[left] + " right: " + array[right])
+    const len = array.length;
+    let max = null;
+    console.log(animations);
     
+    if((right_value != null && right_value != undefined) && (left_value != null && left_value != undefined) 
+    && (array[index]!= null && array[index]!=undefined)) {
+        animations.changeColor(new ValueBar(array[index], index), "#fbc531")
+        animations.compareItems(new ValueBar(array[left], left), new ValueBar(array[right], right))
+    }
+
+    if (left <= len && array[left] > array[index]) max = left;
+    else max = index;
+
+    if (right <= len && array[right] > array[max]) max = right;
+
+
+    if (max != index){
+        //swap
+
+        //animations.changeColors([new ValueBar(array[index], index), new ValueBar(left_value, left), new ValueBar(right_value, right)], "#blue");
+        animations.changeColor(new ValueBar(array[max], max), "#green")
+        animations.changeColor(new ValueBar(array[max], max), "blue")
+        animations.changeColor(new ValueBar(array[index], index), "blue")
+        swapTwoArraysValues(array, index, max, animations);
+        //heapify recursion
+        heapify(array, max, animations);
+    }
+    else animations.changeColor(new ValueBar(array[index], index), "blue");
+
+}
+
+function swapTwoArraysValues(array, index1, index2, animations){
+        const index1Value = array[index1];
+        const index2Value = array[index2];
+        if (index1Value != null && index1Value!=undefined && index2Value!= null && index2Value!=undefined){
+            animations.changeColors([new ValueBar(index1Value, index1), new ValueBar(index2Value, index2)], "#9c88ff");
+            animations.swapItems(new ValueBar(index1Value, index1), new ValueBar(index2Value, index2));
+            animations.changeColors([new ValueBar(index2Value, index1), new ValueBar(index1Value, index2)], "#blue");
+        }
+        //console.log( index2Value+" index was: "+ index2 + "|" +index1Value +" index was: "+index1);
+        
+        array[index1] = index2Value;
+        array[index2] = index1Value;
+        
+        //console.log( array[index1]+" index is: "+ index1 + "|" + array[index2] +" index is: "+index2);
+        //console.log()
 }
 
 export function ValueBar(value, index){

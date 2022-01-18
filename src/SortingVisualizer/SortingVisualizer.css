@@ -18,8 +18,8 @@
 
 #new-array-button {
   border: none;
-  font-size: 2.5vh;
-  width: 60%;
+  font-size: 2vh;
+  width: 80%;
   height: 50%;
   color: #f5f6fa;
   align-self: center;
@@ -35,7 +35,7 @@
 
 .button-container {
   position: relative;
-  width: 21%;
+  width: 15%;
   margin: 0px;
   float: left;
   height: 100%;
@@ -44,8 +44,8 @@
 
 .algorithms-button-container {
   position: relative;
-  width: 41%;
-  margin: 0px;
+  width: 54%;
+  margin: 0 0 0 1%;
   float: left;
   height: 100%;
   /*border: 5px solid coral;*/
@@ -53,15 +53,14 @@
 
 .sorting-buttons {
   border: none;
-  float: inline-start;
+  float: left;
+  margin: 0.5% 0% 0 0.5%;
   font-size: 2vh;
-  width: 40%;
-  height: 65%;
-  margin: 3px;
-  margin-top: 10px;
+  width: 49%;
+  height: 45.2%;
   color: #f5f6fa;
   background-color: #40739e;
-  border-radius: 5px;
+  /*border-radius: 5px;*/
   /*margin: auto;*/
 }
 
@@ -74,23 +73,23 @@
 
 .adjusting-bar-container {
   float: left;
-  width: 38%;
+  width: 30%;
   height: 100%;
   background-color: #273c75;
   /*border: 5px solid coral;*/
 }
 
 #adjusting-bar {
-  width: 60%; /* Full-width */
+  width: 75%; /* Full-width */
   height: 30%; /* Specified height */
-  margin-top: 3vh;
+  margin-top: 1.8vh;
   background: #d3d3d3; /* Grey background */
   /*-webkit-transition: 0.2s; /* 0.2 seconds transition on hover */
   transition: opacity 0.2s;
 }
 #interface {
   position: fixed;
-  height: 15%;
+  height: 20%;
   border-top: 5px solid #192a56;
   bottom: 0px;
   width: 100%;

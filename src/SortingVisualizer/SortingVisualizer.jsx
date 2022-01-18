@@ -1,5 +1,5 @@
 import React from "react";
-import { selectionSortRender, mergeSortFuncRender, createValueBars, ValueBar } from "../SortingAlgorithms/SortingAlgorithms";
+import { selectionSortRender, mergeSortFuncRender, bubbleSortRender, createValueBars, ValueBar, heapSort } from "../SortingAlgorithms/SortingAlgorithms";
 import './SortingVisualizer.css';
 
 const defaultColor = 'blue';
@@ -188,6 +188,30 @@ export default class SortingVisualizer extends React.Component {
     selectionSort(){
       this.animations = new Animations();
       selectionSortRender(createValueBars(this.state.array), this.animations);
+      this.renderAnimations(this.animations);
+      this.disableInterface();
+      setTimeout(() => {
+        this.enableInterface()
+      }, (this.animations.animations_array.length+1) * this.animation_speed);
+    }
+
+
+    bubbleSort(){
+      this.animations = new Animations()
+      let arrayObjects = createValueBars(this.state.array);
+      bubbleSortRender(arrayObjects, this.animations);
+      this.disableInterface();
+      this.renderAnimations(this.animations);
+      setTimeout(() => {
+        this.enableInterface()
+      }, (this.animations.animations_array.length+1) * this.animation_speed);
+
+    }
+
+    heapSort(){
+      this.animations = new Animations()
+      let array = this.state.array.slice()
+      heapSort(array, this.animations);
       console.log(this.animations);
       this.renderAnimations(this.animations);
       this.disableInterface();
@@ -253,6 +277,8 @@ export default class SortingVisualizer extends React.Component {
             <div className="algorithms-button-container">
               <button className="sorting-buttons" onClick={() => this.mergeSort()} disabled={this.state.buttons_disabled}>Merge Sort <div className="time-complexity">O(n•Log n)</div></button>
               <button className="sorting-buttons" onClick={() => this.selectionSort()} disabled={this.state.buttons_disabled}>Selection Sort <div className="time-complexity">O(n<sup>2</sup>)</div></button>
+              <button className="sorting-buttons" onClick={() => this.bubbleSort()} disabled={this.state.buttons_disabled}>Bubble Sort <div className="time-complexity">O(n<sup>2</sup>)</div></button>
+              <button className="sorting-buttons" onClick={() => this.heapSort()} disabled={this.state.buttons_disabled}>Heap Sort <div className="time-complexity">O(n•log n)</div></button>
             </div>
         </div>
         </div>
@@ -307,7 +333,7 @@ export default class SortingVisualizer extends React.Component {
     return result;
   }
 
-  function convertObjectsArrayToIntsArray(objects_array){
+  export function convertObjectsArrayToIntsArray(objects_array){
     let newArray = []
     objects_array.forEach(element => {
       newArray.push(element.value);
@@ -340,7 +366,7 @@ export default class SortingVisualizer extends React.Component {
     let x2 = 95;
     let y1 = 400;
     let y2 = 5;
-    let result = 3/x*300 //2.7 is the good one
+    let result = 2.7/x*300 //2.7 is the good one
     //let result = y1 + (((x-x1)/(x2-x1))*(y2-y1));
     return result;
   }
