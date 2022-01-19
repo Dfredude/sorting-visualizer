@@ -1,26 +1,27 @@
 .array-container {
   margin: auto;
-  position: absolute;
-  bottom: 15%;
-  width: 95%;
+  position: relative;
+  /*bottom: 15%;*/
+  width: 96%;
   height: 85%;
-  padding: 5px;
+  top: 0px;
+  padding: 0 5px;
 }
 
 .array-bar {
   width: 0.4%;
   background-color: blue;
   display: inline-block;
-  margin: 0.3% 0.3%;
+  margin: 0 0.3%;
   vertical-align: top;
   font-size: 50%;
 }
 
 #new-array-button {
   border: none;
-  font-size: 2vh;
-  width: 80%;
-  height: 50%;
+  font-size: 2.5vh;
+  width: 85%;
+  height: 60%;
   color: #f5f6fa;
   align-self: center;
   background-color: #40739e;
@@ -44,7 +45,7 @@
 
 .algorithms-button-container {
   position: relative;
-  width: 54%;
+  width: 59%;
   margin: 0 0 0 1%;
   float: left;
   height: 100%;
@@ -55,8 +56,8 @@
   border: none;
   float: left;
   margin: 0.5% 0% 0 0.5%;
-  font-size: 2vh;
-  width: 49%;
+  font-size: 2.5vw;
+  width: 32.5%;
   height: 45.2%;
   color: #f5f6fa;
   background-color: #40739e;
@@ -73,16 +74,16 @@
 
 .adjusting-bar-container {
   float: left;
-  width: 30%;
+  width: 25%;
   height: 100%;
   background-color: #273c75;
   /*border: 5px solid coral;*/
 }
 
 #adjusting-bar {
-  width: 75%; /* Full-width */
+  width: 85%; /* Full-width */
   height: 30%; /* Specified height */
-  margin-top: 1.8vh;
+  margin-top: 1.5vh;
   background: #d3d3d3; /* Grey background */
   /*-webkit-transition: 0.2s; /* 0.2 seconds transition on hover */
   transition: opacity 0.2s;
@@ -97,8 +98,8 @@
 }
 
 .text {
-  margin-top: 2%;
-  font-size: 2.5vh;
+  margin-top: 4%;
+  font-size: 2vh;
   color: #d3d3d3;
   font-style: italic;
 }
@@ -111,5 +112,5 @@
 }
 
 .time-complexity {
-  font-size: small;
+  font-size: 30%;
 }

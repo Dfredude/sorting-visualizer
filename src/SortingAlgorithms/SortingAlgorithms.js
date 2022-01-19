@@ -27,6 +27,9 @@ export function mergeSortFuncRender(array, array_of_objects, animations, total_l
             newArrayOfObjects.push(new ValueBar(obj2.value, obj2.index))
             newArray.push(array[0], array[1]);
         }
+        animations.changeColors([obj1, obj2], ["#4cd137", "#4cd137"]);
+        animations.changeColors([obj1, obj2], ["#4cd137", "#4cd137"]);
+        animations.changeColors([obj1, obj2], ["blue", "blue"]);
     }
     else {
         let [arr1, objArray1] = mergeSortFuncRender(array.slice(0, Math.floor(len/2)), array_of_objects.slice(0, Math.floor(len/2)), animations, total_length);
@@ -43,7 +46,7 @@ export function mergeSortFuncRender(array, array_of_objects, animations, total_l
             animations.compareItems(objbar1, objbar2);
             if (arr1[0] < arr2[0]) {
                 if (last_merge === true){
-                    animations.changeColor(objbar1, "green"); 
+                    animations.changeColor(objbar1, "#44bd32"); 
                 }
                 newArray.push(arr1[0]);
                 arr1.shift();
@@ -53,6 +56,8 @@ export function mergeSortFuncRender(array, array_of_objects, animations, total_l
                 
             }
             else {
+                animations.changeColors([new ValueBar(objbar1.value, objbar1.index), new ValueBar(objbar2.value,objbar2.index)], ['#fbc531', '#fbc531'])
+                animations.changeColors([new ValueBar(objbar1.value, objbar1.index), new ValueBar(objbar2.value,objbar2.index)], ['blue', 'blue'])
                 newArray.push(arr2[0]);
                 arr2.shift()
                 //Animation push
@@ -60,7 +65,7 @@ export function mergeSortFuncRender(array, array_of_objects, animations, total_l
                 //Aux Array
                 newArrayOfObjects.push(new ValueBar(objbar2.value, objArray1.index));
                 if (last_merge === true){
-                    animations.changeColor(newArrayOfObjects[newArrayOfObjects.length-1], "green")    
+                    animations.changeColor(newArrayOfObjects[newArrayOfObjects.length-1], "#44bd32")    
                 }
                 //Update existing objarray indexes
                 objArray1.forEach(element => {
@@ -76,7 +81,7 @@ export function mergeSortFuncRender(array, array_of_objects, animations, total_l
         if (arr2.length <= 0) {
             for (let i = 0; i<arr1.length; i++) {
                 if (last_merge === true){
-                    animations.changeColor(objArray1[i], "green");
+                    animations.changeColor(objArray1[i], "#44bd32");
                 }
                 let objbar = objArray1[i];
                 newArray.push(arr1[i]);
@@ -87,7 +92,7 @@ export function mergeSortFuncRender(array, array_of_objects, animations, total_l
         else {
             for (let i = 0; i<arr2.length; i++) {
                 if (last_merge === true){
-                    animations.changeColor(objArray2[i], "green");
+                    animations.changeColor(objArray2[i], "#44bd32");
                 }
                 newArray.push(arr2[i]);
                 let objbar = objArray2[i];
@@ -123,8 +128,6 @@ export function selectionSortRender(values_array, animations){
             }
         }
         //animations.changeColors([new ValueBar(min.value, sorted+min.index), new ValueBar(item.value, sorted+i)], ['blue', 'yellow']);
-        animations.changeColor(new ValueBar(min.value, sorted+min.index), "#44bd32");
-        animations.changeColor(new ValueBar(min.value, sorted+min.index), "blue");
         animations.changeColor(new ValueBar(min.value, sorted+min.index), "#44bd32");
         animations.changeColor(new ValueBar(min.value, sorted+min.index), "blue");
         animations.changeColor(new ValueBar(min.value, sorted+min.index), "#44bd32");
@@ -271,6 +274,113 @@ function swapTwoArraysValues(array, index1, index2, animations){
         
         //console.log( array[index1]+" index is: "+ index1 + "|" + array[index2] +" index is: "+index2);
         //console.log()
+}
+
+export function quickSort(array, low, high, animations){
+    if (high-low === 0){
+        animations.changeColor(new ValueBar(array[low], low), "#44bd32")
+    }
+    else if (low<high){
+        console.log(animations)
+        let len = high-low+1;
+        let pivot_location = Math.floor(low + (high-low)/2);
+        //if (len>2){
+        //    pivot_location = medianOfThree(array, low, high, animations);
+        //}
+        let swapping = true;
+        let left = low;
+        let right = high-1;
+        const pivot_value = array[pivot_location];
+        animations.changeColor(new ValueBar(pivot_value, pivot_location), "#fbc531");
+        animations.changeColor(new ValueBar(array[high], high), "#fbc531");
+        animations.changeColor(new ValueBar(pivot_value, pivot_location), "blue");
+        animations.swapItems(new ValueBar(pivot_value, pivot_location), new ValueBar(array[high], high));
+        movePivot(array, pivot_location, high);
+        animations.changeColor(new ValueBar(pivot_value, high), "#fbc531");
+        while (swapping === true){
+            //find left large number
+            let left_not_found = true;
+            let right_not_found = true;
+            while (left_not_found){
+                //animations.changeColor(new ValueBar(array[left], left), "#c23616")
+                if (array[left] > pivot_value){
+                    //animations.changeColor(new ValueBar(array[left], left), "#8c7ae6")
+                    left_not_found = false;
+                }
+                else if (left>right){
+                    break
+                }
+                else {
+                    //animations.changeColor(new ValueBar(array[left], left), "blue")
+                    left++;
+                }
+            }
+            while (right_not_found){
+                //animations.changeColor(new ValueBar(array[right], right), "#c23616")
+                if (array[right] < pivot_value){
+                    //animations.changeColor(new ValueBar(array[right], right), "#8c7ae6")
+                    right_not_found = false;
+                }
+                else if (right<left){
+                    break
+                }
+                else {
+                    //animations.changeColor(new ValueBar(array[right], right), "#blue")
+                    right--;}
+            }
+            if (left>right || right<left) swapping = false;
+            else{
+                animations.changeColors([new ValueBar(array[left], left), new ValueBar(array[right], right)], ["#c23616"]);
+                animations.changeColors([new ValueBar(array[left], left), new ValueBar(array[right], right)], ["#c23616"]);
+                animations.swapItems(new ValueBar(array[left], left), new ValueBar(array[right], right));
+                swap(array, left, right);
+                animations.changeColors([new ValueBar(array[left], left), new ValueBar(array[right], right)], ["blue"]);
+            }
+        }
+        animations.changeColor(new ValueBar(pivot_value, high), "blue");
+        animations.swapItems(new ValueBar(pivot_value, high), new ValueBar(array[left], left))
+        movePivot(array, high, left);
+        console.log(`${array[left]} is now sorted`);
+        animations.changeColor(new ValueBar(pivot_value, left), "#44bd32")
+        console.log(array)
+        //if (len < 3){
+        //    let going_to_change_colors = [];
+        //    for(let i=0; i<len; i++){
+        //        going_to_change_colors.push(new ValueBar(array[low+i], low+i))
+        //    }
+        //    animations.changeColors(going_to_change_colors, ["#44bd32"])
+        //}
+        quickSort(array, low, left -1, animations)
+        quickSort(array, left+1, high, animations)
+    }
+
+}
+
+function medianOfThree(array, low, high, animations){
+    let mid = Math.floor(low + (high-low)/2);
+    let tempArray = [array[low], array[mid], array[high]];
+    tempArray.sort((a, b) => a-b);
+    animations.swapItems( new ValueBar(array[low], low), new ValueBar(tempArray[0], low));
+    animations.swapItems( new ValueBar(array[mid], mid), new ValueBar(tempArray[1], mid));
+    animations.swapItems( new ValueBar(array[high], high), new ValueBar(tempArray[2], high));
+    array[low] = tempArray[0];
+    array[mid] = tempArray[1];
+    array[high] = tempArray[2];
+    return mid;
+}
+
+function movePivot(array, pivot_index, new_index){
+    const pivot_value = array[pivot_index];
+    const other_value = array[new_index];
+    array[new_index] = pivot_value;
+    array[pivot_index] = other_value;
+}
+
+function swap(array, index1, index2){
+    const index1Value = array[index1];
+    const index2Value = array[index2];
+    array[index1] = index2Value;
+    array[index2] = index1Value;
 }
 
 export function ValueBar(value, index){
