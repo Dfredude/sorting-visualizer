@@ -1,5 +1,5 @@
 import React from "react";
-import { selectionSortRender, mergeSortFuncRender, bubbleSortRender, createValueBars, ValueBar, heapSort, quickSort } from "../SortingAlgorithms/SortingAlgorithms";
+import { selectionSortRender, mergeSortFuncRender, bubbleSortRender, createValueBars, ValueBar, heapSort, quickSort, insertionSortRender } from "../SortingAlgorithms/SortingAlgorithms";
 import './SortingVisualizer.css';
 
 const defaultColor = 'blue';
@@ -208,81 +208,86 @@ export default class SortingVisualizer extends React.Component {
     }
 
     mergeSort(){
-      this.animations = new Animations();
+      let animations = new Animations();
       //This functions returns all animations within the animations object
-      mergeSortFuncRender(this.state.array, createValueBars(this.state.array), this.animations, this.state.array.length);
-      this.disableInterface();
-      console.log(this.animations)
-      this.renderAnimations(this.animations);
+      mergeSortFuncRender(this.state.array, createValueBars(this.state.array), animations, this.state.array.length);
+      this.disableInterface();      this.renderAnimations(animations);
       //this.disableInterface();
       setTimeout(() => {
         this.enableInterface()
-      }, (this.animations.animations_array.length+1) * this.animation_speed);
+      }, (animations.animations_array.length+1) * this.animation_speed);
     }
 
     selectionSort(){
-      this.animations = new Animations();
-      selectionSortRender(createValueBars(this.state.array), this.animations);
+      let animations = new Animations();
+      selectionSortRender(createValueBars(this.state.array), animations);
       this.disableInterface();
-      this.renderAnimations(this.animations);
+      this.renderAnimations(animations);
       //this.disableInterface();
       setTimeout(() => {
         this.enableInterface()
-      }, (this.animations.animations_array.length+1) * this.animation_speed);
+      }, (animations.animations_array.length+1) * this.animation_speed);
     }
 
 
     bubbleSort(){
-      this.animations = new Animations()
+      let animations = new Animations()
       let arrayObjects = createValueBars(this.state.array);
-      bubbleSortRender(arrayObjects, this.animations);
+      bubbleSortRender(arrayObjects, animations);
       //this.disableInterface();
       this.disableInterface();
-      this.renderAnimations(this.animations);
+      this.renderAnimations(animations);
       setTimeout(() => {
         this.enableInterface()
-      }, (this.animations.animations_array.length+1) * this.animation_speed);
+      }, (animations.animations_array.length+1) * this.animation_speed);
 
     }
 
     heapSort(){
-      this.animations = new Animations()
+      let animations = new Animations()
       let array = this.state.array.slice()
-      heapSort(array, this.animations);
-      console.log(this.animations);
+      heapSort(array, animations);
       this.disableInterface();
-      this.renderAnimations(this.animations);
+      this.renderAnimations(animations);
       //this.disableInterface();
       setTimeout(() => {
         this.enableInterface()
-      }, (this.animations.animations_array.length+1) * this.animation_speed);
+      }, (animations.animations_array.length+1) * this.animation_speed);
     }
 
     
     quickSort(){
-      this.animations = new Animations();
+      let animations = new Animations();
       let array = this.state.array.slice();
-      quickSort(array, 0, array.length-1, this.animations);
-      console.log(this.animations);
+      quickSort(array, 0, array.length-1, animations);
       this.disableInterface();
-      console.log(array)
-      this.renderAnimations(this.animations);
+      this.renderAnimations(animations);
       //this.disableInterface();
       setTimeout(() => {
         this.enableInterface()
-      }, (this.animations.animations_array.length+1) * this.animation_speed);
+      }, (animations.animations_array.length+1) * this.animation_speed);
 
     }
     
+    insertionSort(){
+      let animations = new Animations();
+      let array = this.state.array.slice()
+      insertionSortRender(array, animations);
+      this.disableInterface();
+      this.renderAnimations(animations);
+      setTimeout(() => {
+        this.enableInterface()
+      }, (animations.animations_array.length+1) * this.animation_speed);
+    }
+
     test(){
       //let array = [2,6,5,3,8,7,1,0];
-      let array = this.state.array.slice();
-      let JSSort = this.state.array.slice();
-      quickSort(array, 0, array.length-1);
-      JSSort.sort((a,b) => a-b);
       for(let i=0; i<1000; i++){
-        if (areArraysEqual(array, JSSort)){
-          console.log("Nice")
+        this.resetArray();
+        let JSSort = this.state.array.slice();
+        insertionSortRender(this.state.array);
+        JSSort.sort((a,b) => a-b);
+        if (areArraysEqual(this.state.array, JSSort)){
         }
       }
     }
@@ -338,7 +343,7 @@ export default class SortingVisualizer extends React.Component {
             <div className="separator"></div>
             <div className="adjusting-bar-container">
               <div className="text">Change size and speed of the Array</div>
-              <input type="range" min="3" max="90" id="adjusting-bar" onChange={() => this.handleChange()}/>
+              <input type="range" min="3" max="125" id="adjusting-bar" onChange={() => this.handleChange()}/>
             </div> 
             <div className="separator"></div>
             <div className="algorithms-button-container">
@@ -347,6 +352,7 @@ export default class SortingVisualizer extends React.Component {
               <button className="sorting-buttons" onClick={() => this.bubbleSort()} disabled={this.state.buttons_disabled} >Bubble Sort <div className="time-complexity">O(n<sup>2</sup>)</div></button>
               <button className="sorting-buttons" onClick={() => this.heapSort()} disabled={this.state.buttons_disabled} >Heap Sort <div className="time-complexity">O(n•log n)</div></button>
               <button className="sorting-buttons" onClick={() => this.quickSort()} disabled={this.state.buttons_disabled} >Quick Sort <div className="time-complexity">O(n•log n)</div></button>
+              <button className="sorting-buttons" onClick={() => this.insertionSort()} disabled={this.state.buttons_disabled} >Insertion Sort <div className="time-complexity">O(n<sup>2</sup>)</div></button>
             </div>
         </div>
         </div>
@@ -434,7 +440,7 @@ export default class SortingVisualizer extends React.Component {
     let x2 = 95;
     let y1 = 400;
     let y2 = 5;
-    let result = 3/x*300 //2.7 is the good one
+    let result = 2.7/x*300 //2.7 is the good one
     //let result = y1 + (((x-x1)/(x2-x1))*(y2-y1));
     return result;
   }
