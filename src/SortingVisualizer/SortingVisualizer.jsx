@@ -13,11 +13,10 @@ export default class SortingVisualizer extends React.Component {
 
       this.state = {
         array: [],
-        bars_width: .8,
         buttons_disabled: false,
         gen_new_array_disabled: false,
       };
-      this.amount_of_bars = 90;
+      this.amount_of_bars = 100;
       this.animation_speed = 10;
       this.running = false;
       this.ran = false;
@@ -34,7 +33,7 @@ export default class SortingVisualizer extends React.Component {
     componentDidUpdate(){
       if (this.changed=== true){
         const bars = document.getElementsByClassName("array-bar");
-        const new_width = 46/bars.length;
+        const new_width = 55/bars.length;
         for(let i=0; i<bars.length; i++){
           bars[i].style.width = `${new_width}%`;
         }
@@ -96,6 +95,7 @@ export default class SortingVisualizer extends React.Component {
       let key = getRandomString(30);
       this.running_animations.push(key);
       let animations_array = animations.animations_array;
+      console.log(animations_array)
       let len = animations_array.length;
       const arraybars = document.getElementsByClassName("array-bar");
       for(let i=0; i<len; i++) {
@@ -343,7 +343,7 @@ export default class SortingVisualizer extends React.Component {
             <div className="separator"></div>
             <div className="adjusting-bar-container">
               <div className="text">Change size and speed of the Array</div>
-              <input type="range" min="3" max="125" id="adjusting-bar" onChange={() => this.handleChange()}/>
+              <input type="range" min="3" max="100" id="adjusting-bar" onChange={() => this.handleChange()}/>
             </div> 
             <div className="separator"></div>
             <div className="algorithms-button-container">
@@ -372,6 +372,7 @@ export default class SortingVisualizer extends React.Component {
     };
     this.compareItems = function(item1, item2) {
       this.animations_array.push(new Animation("compare", [new ValueBar(item1.value, item1.index), new ValueBar(item2.value, item2.index)]));
+      this.animations_array.push(new Animation("compare", [new ValueBar(item1.value, item1.index), new ValueBar(item2.value, item2.index)]));
       this.animations_array.push(new Animation("setDefaultColor", [new ValueBar(item1.value, item1.index), new ValueBar(item2.value, item2.index)]))
     };
     this.overrideItems = function(item1, item2, arrayOfItemsToDrift) {
@@ -381,6 +382,7 @@ export default class SortingVisualizer extends React.Component {
       this.animations_array.push(new Animation("set_last_merge_color", [new ValueBar(item1.value, item1.index), new ValueBar(item2.value, item2.index)]));
     }
     this.changeColor = function(item, color){
+      this.animations_array.push(new Animation("change_color", [item], null, color))
       this.animations_array.push(new Animation("change_color", [item], null, color))
     }
     this.changeColors = function(items, colors){
@@ -440,7 +442,7 @@ export default class SortingVisualizer extends React.Component {
     let x2 = 95;
     let y1 = 400;
     let y2 = 5;
-    let result = 2.7/x*300 //2.7 is the good one
+    let result = 4.5/x*300 //2.7 is the good one
     //let result = y1 + (((x-x1)/(x2-x1))*(y2-y1));
     return result;
   }

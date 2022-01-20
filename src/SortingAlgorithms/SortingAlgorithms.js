@@ -107,6 +107,49 @@ export function selectionSortRender(values_array, animations){
     let values_array_copy = values_array.slice();
     let new_index = 0;
     let sorted = 0;
+
+    let min = values_array_copy[0];
+    //Initiating smallest value
+    animations.changeColor(new ValueBar(min.value, sorted), "#fbc531");//Yellow
+    
+    //Extra loop for bug fixing
+    for(let i=1; i<values_array_copy.length;i++){
+        let item = values_array_copy[i];
+        animations.changeColor(new ValueBar(item.value, sorted+i), "red");
+        if(item.value < min.value){
+            animations.changeColor(new ValueBar(item.value, sorted+i), "#blue");
+            animations.changeColor(new ValueBar(item.value, sorted+i), "#9c88ff"); //Purple
+            animations.changeColors([new ValueBar(min.value, sorted+min.index), new ValueBar(item.value, sorted+i)], ['blue', '#fbc531']);
+            
+            min = item;
+            
+        }
+        else{
+            animations.changeColor(new ValueBar(item.value, sorted+i), "blue")
+        }
+        //Temporal bug fix
+        if (i === 7){
+            animations.changeColor(new ValueBar(min.value, 0), "blue")
+        }//bug fix
+    }
+    //animations.changeColors([new ValueBar(min.value, sorted+min.index), new ValueBar(item.value, sorted+i)], ['blue', 'yellow']);
+    animations.changeColor(new ValueBar(min.value, sorted+min.index), "#44bd32");
+    animations.changeColor(new ValueBar(min.value, sorted+min.index), "blue");
+    animations.changeColor(new ValueBar(min.value, sorted+min.index), "#44bd32");
+    animations.changeColor(new ValueBar(min.value, sorted+min.index), "blue");
+    animations.overrideItems(new ValueBar(values_array_copy[0], sorted), new ValueBar(min.value, sorted+min.index), values_array_copy)
+    animations.changeColor(new ValueBar(min.value, sorted), "#44bd32")
+    if (min.index+sorted != sorted){
+        animations.changeColor(new ValueBar(min.value, sorted+min.index), "blue")
+    }
+    //Returnin smalles value of each iteration
+    new_array.push(new ValueBar(min.value, new_index))
+    values_array_copy.splice(min.index, 1);
+    //sorted++;
+    setIndexesToNewObjectsArray(values_array_copy, 0)
+    sorted++;
+    new_index++;//Extra loop ends here
+
     while (values_array_copy.length > 0){
         let min = values_array_copy[0];
         //Initiating smallest value
@@ -125,10 +168,6 @@ export function selectionSortRender(values_array, animations){
             else{
                 animations.changeColor(new ValueBar(item.value, sorted+i), "blue")
             }
-            //Temporal bug fix
-            if (sorted === 0 && i === 9){
-                animations.changeColor(new ValueBar(min.value, 0), "blue")
-            }//bug fix
         }
         //animations.changeColors([new ValueBar(min.value, sorted+min.index), new ValueBar(item.value, sorted+i)], ['blue', 'yellow']);
         animations.changeColor(new ValueBar(min.value, sorted+min.index), "#44bd32");
@@ -155,13 +194,27 @@ export function bubbleSortRender(array, animations){
     let array_copy = convertObjectsArrayToIntsArray(array);
     let len = array_copy.length;
     let sorted_array = [];
-    for(let i=0; i<len; i++){
+    //Temporal Bug Fix~~~ for loop
+    for(let j=0; j<array_copy.length-1; j++){
+        animations.compareItems(new ValueBar(array_copy[j], j), new ValueBar(array_copy[j+1], j+1))
+        if (array_copy[j] > array_copy[j+1]){
+            animations.swapItems(new ValueBar(array_copy[j], j), new ValueBar(array_copy[j+1], j+1))
+            const temp1 = array_copy[j];
+            const temp2 = array_copy[j+1];
+            array_copy[j] = temp2;
+            array_copy[j+1] = temp1;
+        }
+        if (j===5){
+            animations.changeColors([new ValueBar(array_copy[0], 0), new ValueBar(array_copy[1], 1)], ["blue", "blue"])
+        }
+    }
+    let item_sorted = new ValueBar(array_copy.pop(), array_copy.length);
+    animations.changeColor(item_sorted, "#44bd32")
+    sorted_array.unshift(item_sorted);
+    
+    for(let i=1; i<len; i++){
         for(let j=0; j<array_copy.length-1; j++){
             animations.compareItems(new ValueBar(array_copy[j], j), new ValueBar(array_copy[j+1], j+1))
-            //Temporal Bug Fix~~~
-            if (i===0){
-                animations.changeColors([new ValueBar(array_copy[0], 0), new ValueBar(array_copy[1], 1)], ["blue", "blue"])
-            }
             //Temporal Bug Fix~~~
             if (array_copy[j] > array_copy[j+1]){
                 animations.swapItems(new ValueBar(array_copy[j], j), new ValueBar(array_copy[j+1], j+1))
@@ -369,7 +422,20 @@ function movePivot(array, pivot_index, new_index){
 
 export function insertionSortRender(array, animations){
     let len = array.length;
-    for(let i=0;i<len; i++){
+
+    //extra loop for bug fixing
+    let j=1;
+    while (j > 0 && array[j-1] > array[j]){
+        animations.compareItems(new ValueBar(array[j-1], j-1), new ValueBar(array[j], j))
+        animations.swapItems(new ValueBar(array[j-1], j-1), new ValueBar(array[j], j))
+        swap(array, j, j-1);
+        j--;
+    }
+    //Temporal bug fix
+    animations.changeColor(new ValueBar(0, 0), "blue")
+    //bug fix
+
+    for(let i=2;i<len; i++){
         //animations.changeColor(new ValueBar(array[i], i))
         let j=i;
         while (j > 0 && array[j-1] > array[j]){
@@ -379,9 +445,9 @@ export function insertionSortRender(array, animations){
             j--;
         }
         //Temporal bug fix
-        if ( i === 1){
-            animations.changeColor(new ValueBar(0, 0), "blue")
-        }//bug fix
+        //if ( i === 1){
+        //    animations.changeColor(new ValueBar(0, 0), "blue")
+        //}//bug fix
     }
 }
 
