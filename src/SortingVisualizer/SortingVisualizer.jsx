@@ -5,6 +5,7 @@ import './SortingVisualizer.css';
 const defaultColor = 'blue';
 const comparingColor = 'red';
 const renderer = 4;
+const delay = 200;
 
 export default class SortingVisualizer extends React.Component {
     constructor(props) {
@@ -73,7 +74,6 @@ export default class SortingVisualizer extends React.Component {
       if (this.status_bar_values_text){
         if (this.amount_of_bars > 12){
           let bar_texts = document.getElementsByClassName("array-bar-text");
-          let bars = document.getElementsByClassName("array-bar");
           for (let i=0; i<bar_texts.length; i++){
             bar_texts[i].textContent = null;
           }
@@ -95,7 +95,6 @@ export default class SortingVisualizer extends React.Component {
       let key = getRandomString(30);
       this.running_animations.push(key);
       let animations_array = animations.animations_array;
-      console.log(animations_array)
       let len = animations_array.length;
       const arraybars = document.getElementsByClassName("array-bar");
       for(let i=0; i<len; i++) {
@@ -103,34 +102,34 @@ export default class SortingVisualizer extends React.Component {
         if (i === len-1) {
           const index = this.running_animations.indexOf(key)
           setTimeout(() => {
-            if (this.running_animations.indexOf(key)!= -1){
+            if (this.running_animations.indexOf(key)!== -1){
             this.running = false;
             this.ran = true;
             this.running_animations.splice(index, 1);
 
             }
-          }, (i+2) * this.animation_speed)
+          }, delay + ((i+2) * this.animation_speed))
         }
         if (animation.type === 'compare') {
           const bar1Style = arraybars[animation.items[0].index].style;
           const bar2Style = arraybars[animation.items[1].index].style;
           setTimeout(() => {
-            if (this.running_animations.indexOf(key)!= -1){
+            if (this.running_animations.indexOf(key)!== -1){
             bar1Style.backgroundColor = comparingColor;
             bar2Style.backgroundColor = comparingColor;
             }
-            }, i * this.animation_speed
+            }, delay + (i * this.animation_speed)
           )
         }
         else if (animation.type === 'setDefaultColor'){
           const bar1Style = arraybars[animation.items[0].index].style;
           const bar2Style = arraybars[animation.items[1].index].style;
           setTimeout(() => {
-            if (this.running_animations.indexOf(key)!= -1){
+            if (this.running_animations.indexOf(key)!== -1){
             bar1Style.backgroundColor = defaultColor;
             bar2Style.backgroundColor = defaultColor;
             }
-          }, i * this.animation_speed)
+          }, delay + (i * this.animation_speed))
         }
         else if (animation.type === 'swap') {
           const bar1 = arraybars[animation.items[0].index];
@@ -140,7 +139,7 @@ export default class SortingVisualizer extends React.Component {
           let height1 = animation.items[0].value;
           let height2 = animation.items[1].value;
           setTimeout(() => {
-            if (this.running_animations.indexOf(key)!= -1){
+            if (this.running_animations.indexOf(key)!== -1){
               bar1Style.height = `${Math.floor(height2/renderer)}vh`;
               bar2Style.height = `${Math.floor(height1/renderer)}vh`;
               if (this.status_bar_values_text){
@@ -150,7 +149,7 @@ export default class SortingVisualizer extends React.Component {
                 bar2_text.textContent = height1;
                 }
             }
-          }, i * this.animation_speed)
+          }, delay + (i * this.animation_speed))
         }
         else if (animation.type === "override") {
           let item1 = animation.items[0];
@@ -166,7 +165,7 @@ export default class SortingVisualizer extends React.Component {
             arraybarsvalues.push(drift_array[j].value);
           }
           setTimeout(() => {
-            if (this.running_animations.indexOf(key)!= -1){
+            if (this.running_animations.indexOf(key)!== -1){
               bar1Style.height = `${height/renderer}vh`;
               if (this.status_bar_values_text){
                 arraybars[item1.index].getElementsByClassName("array-bar-text")[0].textContent = height;
@@ -181,28 +180,28 @@ export default class SortingVisualizer extends React.Component {
                 l++; 
               }
             }
-          }, i * this.animation_speed)
+          }, delay + (i * this.animation_speed))
         }
         else if(animation.type === "change_color"){
           const barStyle = arraybars[animation.items[0].index].style;
           setTimeout(() => {
-            if (this.running_animations.indexOf(key)!= -1){
+            if (this.running_animations.indexOf(key)!== -1){
               barStyle.backgroundColor = animation.newColor;
             }
-          }, i * this.animation_speed)
+          }, delay + (i * this.animation_speed))
         }
         else if(animation.type === "change-colors"){
           let items = animation.items;
           let colors = animation.newColor;
           setTimeout(() => {
-            if (this.running_animations.indexOf(key)!= -1){
+            if (this.running_animations.indexOf(key)!== -1){
               for(let j=0; j<items.length; j++){
                 let bar_style = arraybars[items[j].index].style;
                 let color = colors[j];
                 bar_style.backgroundColor = color;
               }
             }
-          }, i*this.animation_speed)
+          }, delay + (i * this.animation_speed))
         }
       }
     }
@@ -426,22 +425,7 @@ export default class SortingVisualizer extends React.Component {
     return newArray;
   }
 
-
-  function width_interpolation(x){
-    let x1 = 6;
-    let x2 = 95;
-    let y1 = 4.2;
-    let y2 = .5;
-    //let result = y1 + (((x-x1)/(x2-x1))*(y2-y1));
-    let result = 20/x
-    return result;
-  }
-
   function speed_interpolation(x){
-    let x1 = 6;
-    let x2 = 95;
-    let y1 = 400;
-    let y2 = 5;
     let result = 4.5/x*300 //2.7 is the good one
     //let result = y1 + (((x-x1)/(x2-x1))*(y2-y1));
     return result;

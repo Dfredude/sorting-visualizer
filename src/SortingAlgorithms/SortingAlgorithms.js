@@ -1,4 +1,3 @@
-import { calculateNewValue } from "@testing-library/user-event/dist/utils";
 import { convertObjectsArrayToIntsArray } from "../SortingVisualizer/SortingVisualizer"
 
 //Function used in main jsx App
@@ -33,13 +32,12 @@ export function mergeSortFuncRender(array, array_of_objects, animations, total_l
     else {
         let [arr1, objArray1] = mergeSortFuncRender(array.slice(0, Math.floor(len/2)), array_of_objects.slice(0, Math.floor(len/2)), animations, total_length);
         let [arr2, objArray2] = mergeSortFuncRender(array.slice(Math.floor(len/2)), array_of_objects.slice(Math.floor(len/2)), animations, total_length);
-        let i = 0;
         let last_merge = false;
         if (arr1.length+arr2.length === total_length){
             last_merge = true;
         }
         const startingIndex = objArray1[0].index;
-        while (arr1.length != 0 && arr2.length != 0){
+        while (arr1.length !== 0 && arr2.length !== 0){
             let objbar1 = objArray1[0];
             let objbar2 = objArray2[0];
             animations.compareItems(objbar1, objbar2);
@@ -74,7 +72,6 @@ export function mergeSortFuncRender(array, array_of_objects, animations, total_l
                 
                 objArray2.shift();
             }
-            i++;
         }
         setIndexesToNewObjectsArray(newArrayOfObjects, startingIndex);
         if (arr2.length <= 0) {
@@ -112,46 +109,8 @@ export function selectionSortRender(values_array, animations){
     //Initiating smallest value
     animations.changeColor(new ValueBar(min.value, sorted), "#fbc531");//Yellow
     
-    //Extra loop for bug fixing
-    for(let i=1; i<values_array_copy.length;i++){
-        let item = values_array_copy[i];
-        animations.changeColor(new ValueBar(item.value, sorted+i), "red");
-        if(item.value < min.value){
-            animations.changeColor(new ValueBar(item.value, sorted+i), "#blue");
-            animations.changeColor(new ValueBar(item.value, sorted+i), "#9c88ff"); //Purple
-            animations.changeColors([new ValueBar(min.value, sorted+min.index), new ValueBar(item.value, sorted+i)], ['blue', '#fbc531']);
-            
-            min = item;
-            
-        }
-        else{
-            animations.changeColor(new ValueBar(item.value, sorted+i), "blue")
-        }
-        //Temporal bug fix
-        if (i === 7){
-            animations.changeColor(new ValueBar(min.value, 0), "blue")
-        }//bug fix
-    }
-    //animations.changeColors([new ValueBar(min.value, sorted+min.index), new ValueBar(item.value, sorted+i)], ['blue', 'yellow']);
-    animations.changeColor(new ValueBar(min.value, sorted+min.index), "#44bd32");
-    animations.changeColor(new ValueBar(min.value, sorted+min.index), "blue");
-    animations.changeColor(new ValueBar(min.value, sorted+min.index), "#44bd32");
-    animations.changeColor(new ValueBar(min.value, sorted+min.index), "blue");
-    animations.overrideItems(new ValueBar(values_array_copy[0], sorted), new ValueBar(min.value, sorted+min.index), values_array_copy)
-    animations.changeColor(new ValueBar(min.value, sorted), "#44bd32")
-    if (min.index+sorted != sorted){
-        animations.changeColor(new ValueBar(min.value, sorted+min.index), "blue")
-    }
-    //Returnin smalles value of each iteration
-    new_array.push(new ValueBar(min.value, new_index))
-    values_array_copy.splice(min.index, 1);
-    //sorted++;
-    setIndexesToNewObjectsArray(values_array_copy, 0)
-    sorted++;
-    new_index++;//Extra loop ends here
-
     while (values_array_copy.length > 0){
-        let min = values_array_copy[0];
+        min = values_array_copy[0];
         //Initiating smallest value
         animations.changeColor(new ValueBar(min.value, sorted), "#fbc531");//Yellow
         for(let i=1; i<values_array_copy.length;i++){
@@ -176,7 +135,7 @@ export function selectionSortRender(values_array, animations){
         animations.changeColor(new ValueBar(min.value, sorted+min.index), "blue");
         animations.overrideItems(new ValueBar(values_array_copy[0], sorted), new ValueBar(min.value, sorted+min.index), values_array_copy)
         animations.changeColor(new ValueBar(min.value, sorted), "#44bd32")
-        if (min.index+sorted != sorted){
+        if (min.index+sorted !== sorted){
             animations.changeColor(new ValueBar(min.value, sorted+min.index), "blue")
         }
         //Returnin smalles value of each iteration
@@ -194,25 +153,7 @@ export function bubbleSortRender(array, animations){
     let array_copy = convertObjectsArrayToIntsArray(array);
     let len = array_copy.length;
     let sorted_array = [];
-    //Temporal Bug Fix~~~ for loop
-    for(let j=0; j<array_copy.length-1; j++){
-        animations.compareItems(new ValueBar(array_copy[j], j), new ValueBar(array_copy[j+1], j+1))
-        if (array_copy[j] > array_copy[j+1]){
-            animations.swapItems(new ValueBar(array_copy[j], j), new ValueBar(array_copy[j+1], j+1))
-            const temp1 = array_copy[j];
-            const temp2 = array_copy[j+1];
-            array_copy[j] = temp2;
-            array_copy[j+1] = temp1;
-        }
-        if (j===5){
-            animations.changeColors([new ValueBar(array_copy[0], 0), new ValueBar(array_copy[1], 1)], ["blue", "blue"])
-        }
-    }
-    let item_sorted = new ValueBar(array_copy.pop(), array_copy.length);
-    animations.changeColor(item_sorted, "#44bd32")
-    sorted_array.unshift(item_sorted);
-    
-    for(let i=1; i<len; i++){
+    for(let i=0; i<len; i++){
         for(let j=0; j<array_copy.length-1; j++){
             animations.compareItems(new ValueBar(array_copy[j], j), new ValueBar(array_copy[j+1], j+1))
             //Temporal Bug Fix~~~
@@ -282,8 +223,8 @@ function heapify(array, index, animations){
     const len = array.length;
     let max = null;
     
-    if((right_value != null && right_value != undefined) && (left_value != null && left_value != undefined) 
-    && (array[index]!= null && array[index]!=undefined)) {
+    if((right_value !== null && right_value !== undefined) && (left_value !== null && left_value !== undefined) 
+    && (array[index]!== null && array[index]!==undefined)) {
         animations.changeColor(new ValueBar(array[index], index), "#fbc531")
         animations.compareItems(new ValueBar(array[left], left), new ValueBar(array[right], right))
     }
@@ -294,7 +235,7 @@ function heapify(array, index, animations){
     if (right <= len && array[right] > array[max]) max = right;
 
 
-    if (max != index){
+    if (max !== index){
         //swap
 
         //animations.changeColors([new ValueBar(array[index], index), new ValueBar(left_value, left), new ValueBar(right_value, right)], "#blue");
@@ -312,7 +253,7 @@ function heapify(array, index, animations){
 function swapTwoArraysValues(array, index1, index2, animations){
         const index1Value = array[index1];
         const index2Value = array[index2];
-        if (index1Value != null && index1Value!=undefined && index2Value!= null && index2Value!=undefined){
+        if (index1Value !== null && index1Value!==undefined && index2Value!== null && index2Value!==undefined){
             animations.changeColors([new ValueBar(index1Value, index1), new ValueBar(index2Value, index2)], "#9c88ff");
             animations.swapItems(new ValueBar(index1Value, index1), new ValueBar(index2Value, index2));
             animations.changeColors([new ValueBar(index2Value, index1), new ValueBar(index1Value, index2)], "#blue");
@@ -328,7 +269,7 @@ export function quickSort(array, low, high, animations){
         animations.changeColor(new ValueBar(array[low], low), "#44bd32")
     }
     else if (low<high){
-        let len = high-low+1;
+        //let len = high-low+1;
         let pivot_location = Math.floor(low + (high-low)/2);
         //if (len>2){
         //    pivot_location = medianOfThree(array, low, high, animations);
@@ -400,19 +341,6 @@ export function quickSort(array, low, high, animations){
 
 }
 
-function medianOfThree(array, low, high, animations){
-    let mid = Math.floor(low + (high-low)/2);
-    let tempArray = [array[low], array[mid], array[high]];
-    tempArray.sort((a, b) => a-b);
-    animations.swapItems( new ValueBar(array[low], low), new ValueBar(tempArray[0], low));
-    animations.swapItems( new ValueBar(array[mid], mid), new ValueBar(tempArray[1], mid));
-    animations.swapItems( new ValueBar(array[high], high), new ValueBar(tempArray[2], high));
-    array[low] = tempArray[0];
-    array[mid] = tempArray[1];
-    array[high] = tempArray[2];
-    return mid;
-}
-
 function movePivot(array, pivot_index, new_index){
     const pivot_value = array[pivot_index];
     const other_value = array[new_index];
@@ -479,16 +407,6 @@ function setIndexesToNewObjectsArray(array_of_objects, initial_index){
     }
 }
 
-function updateIndexes(array_of_objects, initial_index){
-    let newArray = [];
-    let len = array_of_objects.length;
-    let i = 0
-    for(let item of array_of_objects){
-        newArray.push(new ValueBar(item.value, initial_index+i));
-        i++;
-    }
-}
-
 export function mergeSortArrObjects(bar_objects) {
     let newArray = []
     let len = bar_objects.length
@@ -506,7 +424,7 @@ export function mergeSortArrObjects(bar_objects) {
     else {
         let arr1 = mergeSortFunc(bar_objects.slice(0, Math.floor(len/2)));
         let arr2 = mergeSortFunc(bar_objects.slice(Math.floor(len/2)));
-        while (arr1.length != 0 && arr2.length != 0){
+        while (arr1.length !== 0 && arr2.length !== 0){
             if (arr1[0] < arr2[0]) {
                 newArray.push(arr1[0]);
                 arr1.shift();
@@ -552,7 +470,7 @@ export function mergeSortFunc(array) {
     else {
         let arr1 = mergeSortFunc(array.slice(0, Math.floor(len/2)));
         let arr2 = mergeSortFunc(array.slice(Math.floor(len/2)));
-        while (arr1.length != 0 && arr2.length != 0){
+        while (arr1.length !== 0 && arr2.length !== 0){
             if (arr1[0] < arr2[0]) {
                 newArray.push(arr1[0]);
                 arr1.shift();
