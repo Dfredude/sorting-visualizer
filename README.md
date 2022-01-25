@@ -1,6 +1,6 @@
 # Sorting Visualizer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Checkout the app [here](https://dfredude.github.io/sorting-visualizer/).
 
 ## What is it?
 
