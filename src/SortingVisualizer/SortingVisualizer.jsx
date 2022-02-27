@@ -347,28 +347,28 @@ export default class SortingVisualizer extends React.Component {
             <div className="algorithms-button-container">
               <Row xs={3} xl={6} md={6}>
                 <Col>
-                  <Button className="btn-override" as={Container} onClick={() => this.mergeSort()} disabled={this.state.buttons_disabled}>
-                    Merge Sort<div class="time-complexity">O(n•Log n)</div></Button>
+                  <Container as={Button} className="btn-override" onClick={() => this.mergeSort()} disabled={this.state.buttons_disabled}>
+                    Merge Sort<div class="time-complexity">O(n•Log n)</div></Container>
                 </Col>
                 <Col>
-                  <Button className="btn-override" as={Container} onClick={() => this.mergeSort()} disabled={this.state.buttons_disabled}>
-                    Selection Sort<div class="time-complexity">O(n<sup>2</sup>)</div></Button>
+                  <Container as={Button} className="btn-override" onClick={() => this.selectionSort()} disabled={this.state.buttons_disabled}>
+                    Selection Sort<div class="time-complexity">O(n<sup>2</sup>)</div></Container>
                 </Col>
                 <Col>
-                  <Button className="btn-override" as={Container} onClick={() => this.bubbleSort()} disabled={this.state.buttons_disabled}>
-                    Bubble Sort<div class="time-complexity">O(n<sup>2</sup>)</div></Button>
+                  <Container as={Button} className="btn-override" onClick={() => this.bubbleSort()} disabled={this.state.buttons_disabled}>
+                    Bubble Sort<div class="time-complexity">O(n<sup>2</sup>)</div></Container>
                 </Col>
                 <Col>
-                  <Button className="btn-override" as={Container} onClick={() => this.heapSort()} disabled={this.state.buttons_disabled}>
-                    Heap Sort<div class="time-complexity">O(n•Log n)</div></Button>
+                  <Container as={Button} className="btn-override" onClick={() => this.heapSort()} disabled={this.state.buttons_disabled}>
+                    Heap Sort<div class="time-complexity">O(n•Log n)</div></Container>
                 </Col>
                 <Col>
-                  <Button className="btn-override" as={Container} onClick={() => this.quickSort()} disabled={this.state.buttons_disabled}>
-                    Quick Sort<div class="time-complexity">O(n•Log n)</div></Button>
+                  <Container as={Button} className="btn-override" onClick={() => this.quickSort()} disabled={this.state.buttons_disabled}>
+                    Quick Sort<div class="time-complexity">O(n•Log n)</div></Container>
                 </Col>
                 <Col>
-                  <Button className="btn-override" as={Container} onClick={() => this.insertionSort()} disabled={this.state.buttons_disabled}>
-                    Insertion Sort<div class="time-complexity">O(n<sup>2</sup>)</div></Button>
+                  <Container as={Button} className="btn-override" onClick={() => this.insertionSort()} disabled={this.state.buttons_disabled}>
+                    Insertion Sort<div class="time-complexity">O(n<sup>2</sup>)</div></Container>
                 </Col>
               </Row>
               
