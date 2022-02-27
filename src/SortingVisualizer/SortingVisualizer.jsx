@@ -339,7 +339,7 @@ export default class SortingVisualizer extends React.Component {
         </div>
         <div id="interface">
             <div className="adjusting-bar-container">
-              <div className="text">Change size and speed of the array</div>
+              <div className="text">Change Array Size &#38; Sorting Speed</div>
               <input type="range" min="3" max="100" id="adjusting-bar" onChange={() => this.handleChange()}/>
               <Button onClick={() => this.resetArray()}>New Array</Button>
             </div> 
